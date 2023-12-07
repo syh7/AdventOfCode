@@ -27,22 +27,20 @@ fun findType(occurrencesMap: MutableMap<String, Int>): HandType {
     if (occurrencesMap.filterValues { it == 2 }.count() == 2) {
         return HandType.TWO_PAIR
     }
-
-    val reversed = occurrencesMap.entries.associateBy({ it.value }) { it.key }
-
-    if (reversed.containsKey(5)) {
+    
+    if (occurrencesMap.containsValue(5)) {
         return HandType.FIVE_KIND
     }
-    if (reversed.containsKey(4)) {
+    if (occurrencesMap.containsValue(4)) {
         return HandType.FOUR_KIND
     }
-    if (reversed.containsKey(3)) {
-        if (reversed.containsKey(2)) {
+    if (occurrencesMap.containsValue(3)) {
+        if (occurrencesMap.containsValue(2)) {
             return HandType.FULL_HOUSE
         }
         return HandType.THREE_KIND
     }
-    if (reversed.containsKey(2)) {
+    if (occurrencesMap.containsValue(2)) {
         return HandType.ONE_PAIR
     }
     return HandType.HIGH
