@@ -1,5 +1,6 @@
 package year2023.day8
 
+import calculateLCM
 import readFile
 
 data class Option(val name: String, val left: String, val right: String)
@@ -65,25 +66,4 @@ private fun calculateSteps(
     }
     println("Option ${start.name} took $steps steps and ended in ${currentOption.name}")
     return steps
-}
-
-private fun calculateLCM(numbers: List<Long>): Long {
-    var lcm = numbers[0]
-    for (i in 1 until numbers.size) {
-        lcm = calculateLCM(lcm, numbers[i])
-    }
-    return lcm
-}
-
-private fun calculateLCM(a: Long, b: Long): Long {
-    val largest = if (a > b) a else b
-    var lcm = largest
-    while (true) {
-        if (lcm % a == 0L && lcm % b == 0L) {
-            println("found lcm $lcm")
-            break
-        }
-        lcm += largest
-    }
-    return lcm
 }
