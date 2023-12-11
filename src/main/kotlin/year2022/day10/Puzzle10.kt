@@ -1,13 +1,13 @@
 package year2022.day10
 
-import readFile
+import readSingleLineFile
 
 private const val LIT = "#"
 private const val DARK = " " // supposed to be '.' but this is better readable in the terminal
 
 
 fun main() {
-    val lines = readFile("year2022/day10/actual.txt")
+    val lines = readSingleLineFile("year2022/day10/actual.txt")
 
     val cycleValues = readProgram(lines)
 

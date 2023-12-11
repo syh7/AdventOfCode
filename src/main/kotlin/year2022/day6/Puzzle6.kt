@@ -1,10 +1,10 @@
 package year2022.day6
 
-import readFile
+import readSingleLineFile
 
 
 fun main() {
-    val line = readFile("year2022/day6/actual.txt")[0]
+    val line = readSingleLineFile("year2022/day6/actual.txt")[0]
     val markerLength = 14 // change to 4 for 6A
 
     val chars = line.split("")

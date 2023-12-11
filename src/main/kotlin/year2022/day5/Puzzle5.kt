@@ -1,9 +1,9 @@
 package year2022.day5
 
-import readFile
+import readSingleLineFile
 
 fun main() {
-    val lines = readFile("year2022/day5/actual.txt")
+    val lines = readSingleLineFile("year2022/day5/actual.txt")
 
     val amountOfStacks = (lines[0].length + 1) / 4
 

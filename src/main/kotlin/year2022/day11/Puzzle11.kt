@@ -1,6 +1,7 @@
 package year2022.day11
 
 import calculateLCM
+import readDoubleLineFile
 
 data class Test(
     val divisible: Long,
@@ -22,7 +23,7 @@ fun main() {
 }
 
 private fun partA() {
-    val monkeys = {}.javaClass.classLoader.getResource("year2022/day11/actual.txt")!!.readText().split("\r\n\r\n")
+    val monkeys = readDoubleLineFile("year2022/day11/actual.txt")
         .map { parseMonkey(it) }
 
     for (i in 0 until 20) {
@@ -38,7 +39,7 @@ private fun partA() {
 }
 
 private fun partB() {
-    val monkeys = {}.javaClass.classLoader.getResource("year2022/day11/actual.txt")!!.readText().split("\r\n\r\n")
+    val monkeys = readDoubleLineFile("year2022/day11/actual.txt")
         .map { parseMonkey(it) }
 
     // numbers can become too big
@@ -64,7 +65,7 @@ private fun doRound(monkeys: List<Monkey>, performDivision: Boolean, divisionLCM
     for (monkey in monkeys) {
         for (item in monkey.items) {
             var newItem = performOperation(item, monkey.operation)
-            
+
             if (performDivision) {
                 newItem /= 3
             } else {

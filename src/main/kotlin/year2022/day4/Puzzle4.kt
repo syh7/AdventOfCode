@@ -1,9 +1,9 @@
 package year2022.day4
 
-import readFile
+import readSingleLineFile
 
 fun main() {
-    val lines = readFile("year2022/day4/actual.txt")
+    val lines = readSingleLineFile("year2022/day4/actual.txt")
 
     val total = lines.map { it.split(",") }.count { split ->
         val firstRange = calculateRange(split[0])

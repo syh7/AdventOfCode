@@ -1,6 +1,6 @@
 package year2022.day12
 
-import readFile
+import readSingleLineFile
 
 data class Node(
     val x: Int, val y: Int, val value: Int, var previous: Node? = null, var distance: Int = Int.MAX_VALUE
@@ -18,7 +18,8 @@ private const val START_VALUE = 0
 private const val END_VALUE = 27
 
 fun main() {
-    val lines = readFile("year2022/day12/actual.txt").map { line -> line.split("").filter { it.isNotEmpty() } }
+    val lines =
+        readSingleLineFile("year2022/day12/actual.txt").map { line -> line.split("").filter { it.isNotEmpty() } }
     val graph = readGraph(lines)
 
     val startPartA = graph.flatten().first { it.value == START_VALUE }

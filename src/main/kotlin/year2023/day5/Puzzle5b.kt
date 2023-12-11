@@ -1,9 +1,9 @@
 package year2023.day5
 
-import readFile
+import readSingleLineFile
 
 fun main() {
-    val lines = readFile("year2023/day5/actual.txt")
+    val lines = readSingleLineFile("year2023/day5/actual.txt")
 
     val seedRanges = readSeeds(lines)
 

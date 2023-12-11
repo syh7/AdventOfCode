@@ -1,9 +1,9 @@
 package year2022.day1
 
-import readFile
+import readSingleLineFile
 
 fun main() {
-    val lines = readFile("year2022/day1/actual.txt")
+    val lines = readSingleLineFile("year2022/day1/actual.txt")
 
     val elves = mutableListOf<Int>()
     var tempElf = 0

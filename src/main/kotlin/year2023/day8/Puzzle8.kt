@@ -1,12 +1,12 @@
 package year2023.day8
 
 import calculateLCM
-import readFile
+import readSingleLineFile
 
 data class Option(val name: String, val left: String, val right: String)
 
 fun main() {
-    val lines = readFile("year2023/day8/actual.txt")
+    val lines = readSingleLineFile("year2023/day8/actual.txt")
 
     val instructionOrderList = lines[0].split("").filter { it.isNotEmpty() }
     println(instructionOrderList)

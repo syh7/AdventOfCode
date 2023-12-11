@@ -1,10 +1,10 @@
 package year2023.day9
 
-import readFile
+import readSingleLineFile
 
 
 fun main() {
-    val lines = readFile("year2023/day9/actual.txt")
+    val lines = readSingleLineFile("year2023/day9/actual.txt")
         .map { it.split(" ") }
         .map { it.map { i -> i.toLong() } }
 

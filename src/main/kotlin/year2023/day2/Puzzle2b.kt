@@ -1,10 +1,10 @@
 package year2023.day2
 
-import readFile
+import readSingleLineFile
 
 
 fun main() {
-    val total = readFile("year2023/day2/actual.txt")
+    val total = readSingleLineFile("year2023/day2/actual.txt")
         .map { readGame(it) }
         .map { getMinimumSet(it) }
         .sumOf { it.reds * it.greens * it.blues }

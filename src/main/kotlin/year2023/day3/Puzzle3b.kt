@@ -1,9 +1,9 @@
 package year2023.day3
 
-import readFile
+import readSingleLineFile
 
 fun main() {
-    val lines = readFile("year2023/day3/actual.txt")
+    val lines = readSingleLineFile("year2023/day3/actual.txt")
         .map { ".$it." } // add . at beginning and end for simpler border checking
         .toMutableList()
 

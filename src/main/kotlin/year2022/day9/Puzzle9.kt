@@ -1,6 +1,6 @@
 package year2022.day9
 
-import readFile
+import readSingleLineFile
 
 data class Position(val x: Int, val y: Int)
 
@@ -10,7 +10,7 @@ const val LEFT = "L"
 const val RIGHT = "R"
 
 fun main() {
-    val lines = readFile("year2022/day9/actual.txt")
+    val lines = readSingleLineFile("year2022/day9/actual.txt")
 
     val snakeSizeForA = 2
     val snakeSizeForB = 10

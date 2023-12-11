@@ -1,11 +1,11 @@
 package year2022.day8
 
-import readFile
+import readSingleLineFile
 
 data class Tree(val height: Int, var visible: Boolean = false, var scenic: Int = 0)
 
 fun main() {
-    val lines = readFile("year2022/day8/actual.txt")
+    val lines = readSingleLineFile("year2022/day8/actual.txt")
 
     val grid = mutableListOf<MutableList<Tree>>()
     for (line in lines) {

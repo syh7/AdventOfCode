@@ -1,10 +1,10 @@
 package year2023.day4
 
-import readFile
+import readSingleLineFile
 import kotlin.math.pow
 
 fun main() {
-    val cards = readFile("year2023/day4/actual.txt")
+    val cards = readSingleLineFile("year2023/day4/actual.txt")
         .map { readCard(it) }
     cards.forEach { println(it) }
 

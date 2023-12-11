@@ -1,12 +1,12 @@
 package year2023.day7
 
-import readFile
+import readSingleLineFile
 
 
 private const val ORDER_LIST = "AKQJT98765432"
 
 fun main() {
-    val hands = readFile("year2023/day7/actual.txt").map {
+    val hands = readSingleLineFile("year2023/day7/actual.txt").map {
         val (cards, bid) = it.split(" ")
         Hand(cards, bid.toInt(), getType(cards))
     }.toMutableList()

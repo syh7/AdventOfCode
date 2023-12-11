@@ -1,9 +1,9 @@
 package year2023.day1
 
-import readFile
+import readSingleLineFile
 
 fun main() {
-    val total = readFile("year2023/day1/actual.txt")
+    val total = readSingleLineFile("year2023/day1/actual.txt")
         .map { convertString(it) }
         .map { it.filter { char -> char.isDigit() } }
         .map { it.first() + "" + it.last() }

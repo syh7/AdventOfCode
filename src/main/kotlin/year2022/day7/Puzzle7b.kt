@@ -1,10 +1,10 @@
 package year2022.day7
 
-import readFile
+import readSingleLineFile
 
 
 fun main() {
-    val lines = readFile("year2022/day7/actual.txt")
+    val lines = readSingleLineFile("year2022/day7/actual.txt")
 
     val root = readDirectory(lines)
 

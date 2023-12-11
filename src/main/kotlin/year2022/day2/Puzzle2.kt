@@ -1,9 +1,9 @@
 package year2022.day2
 
-import readFile
+import readSingleLineFile
 
 fun main() {
-    val lines = readFile("year2022/day2/actual.txt")
+    val lines = readSingleLineFile("year2022/day2/actual.txt")
 
     val total = lines.sumOf { calculateScoreForB(it) }
 

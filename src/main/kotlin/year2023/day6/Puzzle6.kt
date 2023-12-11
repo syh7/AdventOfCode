@@ -1,11 +1,11 @@
 package year2023.day6
 
-import readFile
+import readSingleLineFile
 
 data class TimeDistanceRecord(val time: Long, val distanceToBeat: Long)
 
 fun main() {
-    val lines = readFile("year2023/day6/actual.txt")
+    val lines = readSingleLineFile("year2023/day6/actual.txt")
 
     val records = readRecordForB(lines)
 
