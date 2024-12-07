@@ -83,7 +83,7 @@ class Puzzle6 : AbstractAocDay(2024, 6) {
         start: Coord,
         graph: List<List<Location>>
     ): Boolean {
-        val path = mutableListOf<Pair<Coord, Direction>>()
+        val path = mutableSetOf<Pair<Coord, Direction>>()
         var current = start
         var direction = Direction.UP
 
