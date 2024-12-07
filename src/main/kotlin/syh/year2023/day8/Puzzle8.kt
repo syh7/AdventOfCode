@@ -1,6 +1,6 @@
 package syh.year2023.day8
 
-import calculateLCM
+import syh.calculateLCM
 import syh.readSingleLineFile
 
 data class Option(val name: String, val left: String, val right: String)

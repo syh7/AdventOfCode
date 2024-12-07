@@ -1,6 +1,6 @@
 package syh.year2023.day20
 
-import calculateLCM
+import syh.calculateLCM
 import syh.readSingleLineFile
 
 
