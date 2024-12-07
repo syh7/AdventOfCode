@@ -1,0 +1,48 @@
+package syh.year2024.day1
+
+import syh.AbstractAocDay
+import kotlin.math.absoluteValue
+
+class Puzzle1 : AbstractAocDay(2024, 1) {
+    override fun doA(file: String): Long {
+        val (leftList, rightList) = readLeftAndRightList(file)
+
+        val differences = mutableListOf<Int>()
+        for (i in leftList.indices) {
+            differences.add(leftList[i] - rightList[i])
+        }
+        val totalDifferences = differences.sumOf { it.absoluteValue }
+        println("total: $totalDifferences")
+        return totalDifferences.toLong()
+    }
+
+    override fun doB(file: String): Long {
+        val (leftList, rightList) = readLeftAndRightList(file)
+
+        val similarityList = mutableListOf<Int>()
+        for (i in leftList.indices) {
+            val occurrences = rightList.count { it == leftList[i] }
+            similarityList.add(occurrences * leftList[i])
+        }
+
+        val totalDifferences = similarityList.sum()
+        println("total: $totalDifferences")
+        return totalDifferences.toLong()
+    }
+
+    private fun readLeftAndRightList(file: String): Pair<MutableList<Int>, MutableList<Int>> {
+        val leftList = mutableListOf<Int>()
+        val rightList = mutableListOf<Int>()
+
+        readSingleLineFile(file)
+            .forEach {
+                val (left, right) = it.split("   ")
+                leftList.add(left.toInt())
+                rightList.add(right.toInt())
+            }
+        leftList.sort()
+        rightList.sort()
+        return Pair(leftList, rightList)
+    }
+
+}

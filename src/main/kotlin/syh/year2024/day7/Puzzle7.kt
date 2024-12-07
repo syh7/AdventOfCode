@@ -1,12 +1,11 @@
 package syh.year2024.day7
 
 import syh.AbstractAocDay
-import syh.readSingleLineFile
 
 
 class Puzzle7 : AbstractAocDay(2024, 7) {
-    override fun doA(): Long {
-        val equations = readSingleLineFile("year2024/day7/actual.txt")
+    override fun doA(file: String): Long {
+        val equations = readSingleLineFile(file)
             .map {
                 val (expected, numbers) = it.split(": ")
                 expected.toLong() to numbers.split(" ").map { n -> n.toLong() }
@@ -18,8 +17,8 @@ class Puzzle7 : AbstractAocDay(2024, 7) {
         return sum
     }
 
-    override fun doB(): Long {
-        val equations = readSingleLineFile("year2024/day7/actual.txt")
+    override fun doB(file: String): Long {
+        val equations = readSingleLineFile(file)
             .map {
                 val (expected, numbers) = it.split(": ")
                 expected.toLong() to numbers.split(" ").map { n -> n.toLong() }
@@ -30,7 +29,6 @@ class Puzzle7 : AbstractAocDay(2024, 7) {
         println("total correct equations for B: ${correctEquations.size} for a grand total of $sum")
         return sum
     }
-
 
     private fun solveEquationA(expectedResult: Long, currentResult: Long, leftoverValues: List<Long>): Boolean {
         if (currentResult > expectedResult) {
