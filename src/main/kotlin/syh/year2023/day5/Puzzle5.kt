@@ -138,5 +138,10 @@ class Puzzle5 : AbstractAocDay(2023, 5) {
         }
     }
 
+    data class SeedRange(val start: Long, val range: Long) {
+        fun contains(value: Long): Boolean {
+            return value in start..<start + range
+        }
+    }
 }
 

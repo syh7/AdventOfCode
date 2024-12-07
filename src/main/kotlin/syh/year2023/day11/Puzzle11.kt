@@ -1,137 +1,159 @@
 package syh.year2023.day11
 
-import syh.readSingleLineFile
+import syh.AbstractAocDay
 import kotlin.math.abs
 
-data class Node(val coord: Coord, val value: String, var previous: Node? = null, var distance: Long = Long.MAX_VALUE) {
-    override fun toString(): String {
-        val previousStr =
-            if (previous != null) "with previous ${previous!!.coord}" else "without previous"
-        return "$coord, distance $distance, $previousStr"
+typealias Graph = MutableList<MutableList<Puzzle11.Node>>
+
+class Puzzle11 : AbstractAocDay(2023, 11) {
+    private val GALAXY = "#"
+    private val SPACE = "."
+
+    override fun doA(file: String): Long {
+        val lines = readSingleLineFile(file).map { line ->
+            line.split("").filter { it.isNotEmpty() }.toMutableList()
+        }.toMutableList()
+
+        printGalaxy(lines)
+        println()
+
+        val emptyRows = findEmptyRows(lines)
+        val emptyColumns = findEmptyColumns(lines)
+
+        val graph = readGraph(lines)
+        val spaceMultiplier = 2
+
+        val distanceMap = createDistanceMap(graph, emptyRows, emptyColumns, spaceMultiplier)
+
+        val totalDistance = distanceMap.values.sum()
+
+        println("total distance for A is $totalDistance")
+        return totalDistance
     }
-}
 
-data class Coord(val x: Int, val y: Int) {
-    override fun toString(): String {
-        return "[$x][$y]"
+    override fun doB(file: String): Long {
+        val lines = readSingleLineFile(file).map { line ->
+            line.split("").filter { it.isNotEmpty() }.toMutableList()
+        }.toMutableList()
+
+        printGalaxy(lines)
+        println()
+
+        val emptyRows = findEmptyRows(lines)
+        val emptyColumns = findEmptyColumns(lines)
+
+        val graph = readGraph(lines)
+        val spaceMultiplier = 1000000
+
+        val distanceMap = createDistanceMap(graph, emptyRows, emptyColumns, spaceMultiplier)
+
+        val totalDistance = distanceMap.values.sum()
+
+        println("total distance for B is $totalDistance")
+        return totalDistance
     }
-}
 
-const val GALAXY = "#"
-const val SPACE = "."
+    private fun createDistanceMap(
+        graph: Graph,
+        emptyRows: MutableList<Int>,
+        emptyColumns: MutableList<Int>,
+        spaceMultiplierForA: Int
+    ): MutableMap<Pair<Coord, Coord>, Long> {
+        val galaxies = graph.flatten().filter { it.value == GALAXY }
 
-typealias Graph = MutableList<MutableList<Node>>
+        val distanceMap = mutableMapOf<Pair<Coord, Coord>, Long>()
 
-fun main() {
-    val lines = readSingleLineFile("year2023/day11/actual.txt").map { line ->
-        line.split("").filter { it.isNotEmpty() }.toMutableList()
-    }.toMutableList()
+        for (galaxy in galaxies) {
+            for (otherGalaxy in galaxies) {
+                if (galaxy == otherGalaxy) {
+                    continue
+                }
+                if (distanceMap.contains(Pair(galaxy.coord, otherGalaxy.coord))) {
+                    continue
+                }
+                val distance = findDistance(galaxy, otherGalaxy)
 
-    printGalaxy(lines)
-    println()
+                val crossedEmptyRows = emptyRows.count { it in createMinMaxRange(galaxy.coord.x, otherGalaxy.coord.x) }
+                val crossedEmptyColumns = emptyColumns.count { it in createMinMaxRange(galaxy.coord.y, otherGalaxy.coord.y) }
 
-    val spaceMultiplierForA = 2
-    val spaceMultiplierForB = 1000000
+                val multipliedDistance = distance +
+                        (crossedEmptyRows * (spaceMultiplierForA - 1)) +
+                        (crossedEmptyColumns * (spaceMultiplierForA - 1))
 
-    val emptyRows = findEmptyRows(lines)
-    val emptyColumns = findEmptyColumns(lines)
+                distanceMap[Pair(galaxy.coord, otherGalaxy.coord)] = multipliedDistance
 
-    printGalaxy(lines)
-
-    val graph = readGraph(lines)
-    val galaxies = graph.flatten().filter { it.value == GALAXY }
-
-
-    val distanceMapA = mutableMapOf<Pair<Coord, Coord>, Long>()
-    val distanceMapB = mutableMapOf<Pair<Coord, Coord>, Long>()
-
-    for (galaxy in galaxies) {
-        for (otherGalaxy in galaxies) {
-            if (galaxy == otherGalaxy) {
-                continue
+                // path between X and Y is same as path between Y and X, do not count the path double
+                distanceMap[Pair(otherGalaxy.coord, galaxy.coord)] = 0
             }
-            if (distanceMapA.contains(Pair(galaxy.coord, otherGalaxy.coord))) {
-                continue
+        }
+        return distanceMap
+    }
+
+    private fun createMinMaxRange(a: Int, b: Int): IntRange {
+        val list = listOf(a, b)
+        return list.min()..list.max()
+    }
+
+    private fun findDistance(galaxy: Node, otherGalaxy: Node): Long {
+        val deltaX = abs(galaxy.coord.x - otherGalaxy.coord.x)
+        val deltaY = abs(galaxy.coord.y - otherGalaxy.coord.y)
+        return (deltaX + deltaY).toLong()
+    }
+
+    private fun readGraph(input: List<List<String>>): Graph {
+        val allNodes: Graph = mutableListOf()
+        for (i in input.indices) {
+            val rowNodes = mutableListOf<Node>()
+            for (j in input[i].indices) {
+                rowNodes.add(Node(Coord(i, j), value = input[i][j]))
             }
-            val distance = findDistance(galaxy, otherGalaxy)
-
-            val crossedEmptyRows =
-                emptyRows.count { it in createMinMaxRange(galaxy.coord.x, otherGalaxy.coord.x) }
-            val crossedEmptyColumns =
-                emptyColumns.count { it in createMinMaxRange(galaxy.coord.y, otherGalaxy.coord.y) }
-
-            val distanceA =
-                distance + (crossedEmptyRows * (spaceMultiplierForA - 1)) + (crossedEmptyColumns * (spaceMultiplierForA - 1))
-            val distanceB =
-                distance + (crossedEmptyRows * (spaceMultiplierForB - 1)) + (crossedEmptyColumns * (spaceMultiplierForB - 1))
-
-            distanceMapA[Pair(galaxy.coord, otherGalaxy.coord)] = distanceA
-            distanceMapB[Pair(galaxy.coord, otherGalaxy.coord)] = distanceB
-
-            // path between X and Y is same as path between Y and X, do not count the path double
-            distanceMapB[Pair(otherGalaxy.coord, galaxy.coord)] = 0
-            distanceMapA[Pair(otherGalaxy.coord, galaxy.coord)] = 0
+            allNodes.add(rowNodes)
         }
+        return allNodes
     }
 
-    val totalDistanceA = distanceMapA.values.sum()
-    val totalDistanceB = distanceMapB.values.sum()
-
-    println("total distance for A is $totalDistanceA")
-    println("total distance for B is $totalDistanceB")
-
-}
-
-private fun createMinMaxRange(a: Int, b: Int): IntRange {
-    val list = listOf(a, b)
-    return list.min()..list.max()
-}
-
-private fun findDistance(galaxy: Node, otherGalaxy: Node): Long {
-    val deltaX = abs(galaxy.coord.x - otherGalaxy.coord.x)
-    val deltaY = abs(galaxy.coord.y - otherGalaxy.coord.y)
-    return (deltaX + deltaY).toLong()
-}
-
-
-private fun readGraph(input: List<List<String>>): Graph {
-    val allNodes: Graph = mutableListOf()
-    for (i in input.indices) {
-        val rowNodes = mutableListOf<Node>()
-        for (j in input[i].indices) {
-            rowNodes.add(Node(Coord(i, j), value = input[i][j]))
-        }
-        allNodes.add(rowNodes)
-    }
-    return allNodes
-}
-
-private fun findEmptyRows(lines: MutableList<MutableList<String>>): MutableList<Int> {
-    val indexes = mutableListOf<Int>()
-    for (i in lines.indices) {
-        if (lines[i].all { it == SPACE }) {
-            indexes.add(i)
-        }
-    }
-    return indexes
-}
-
-private fun findEmptyColumns(lines: MutableList<MutableList<String>>): MutableList<Int> {
-    val indexes = mutableListOf<Int>()
-    for (j in lines[0].indices) {
-        var allDots = true
+    private fun findEmptyRows(lines: MutableList<MutableList<String>>): MutableList<Int> {
+        val indexes = mutableListOf<Int>()
         for (i in lines.indices) {
-            if (lines[i][j] != SPACE) {
-                allDots = false
+            if (lines[i].all { it == SPACE }) {
+                indexes.add(i)
             }
         }
-        if (allDots) {
-            indexes.add(j)
+        return indexes
+    }
+
+    private fun findEmptyColumns(lines: MutableList<MutableList<String>>): MutableList<Int> {
+        val indexes = mutableListOf<Int>()
+        for (j in lines[0].indices) {
+            var allDots = true
+            for (i in lines.indices) {
+                if (lines[i][j] != SPACE) {
+                    allDots = false
+                }
+            }
+            if (allDots) {
+                indexes.add(j)
+            }
+        }
+        return indexes
+    }
+
+    private fun printGalaxy(lines: List<List<String>>) {
+        lines.forEach { line -> println(line.joinToString("") { it }) }
+    }
+
+    data class Node(val coord: Coord, val value: String, var previous: Node? = null, var distance: Long = Long.MAX_VALUE) {
+        override fun toString(): String {
+            val previousStr =
+                if (previous != null) "with previous ${previous!!.coord}" else "without previous"
+            return "$coord, distance $distance, $previousStr"
         }
     }
-    return indexes
-}
 
-private fun printGalaxy(lines: List<List<String>>) {
-    lines.forEach { line -> println(line.joinToString("") { it }) }
+    data class Coord(val x: Int, val y: Int) {
+        override fun toString(): String {
+            return "[$x][$y]"
+        }
+    }
+
 }

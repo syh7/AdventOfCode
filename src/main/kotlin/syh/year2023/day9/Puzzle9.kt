@@ -1,61 +1,58 @@
 package syh.year2023.day9
 
-import syh.readSingleLineFile
+import syh.AbstractAocDay
 
+class Puzzle9 : AbstractAocDay(2023, 9) {
+    override fun doA(file: String): Long {
+        val lines = readSingleLineFile(file)
+            .map { it.split(" ") }
+            .map { it.map { i -> i.toLong() } }
 
-fun main() {
-    val lines = readSingleLineFile("year2023/day9/actual.txt")
-        .map { it.split(" ") }
-        .map { it.map { i -> i.toLong() } }
+        val allHistories = lines.map { mutableListOf(it) + calculateHistories(it) }
 
-    val allHistories = lines.map { mutableListOf(it) + calculateHistories(it) }
+        val extrapolateFuture = extrapolateFutureSum(allHistories)
+        println("extrapolated future: $extrapolateFuture")
 
-    val extrapolateFuture = extrapolateFutureSum(allHistories)
-    println("extrapolated future: $extrapolateFuture")
+        return extrapolateFuture
+    }
 
-    val extrapolateHistory = extrapolateHistorySum(allHistories)
-    println("extrapolated history: $extrapolateHistory")
+    override fun doB(file: String): Long {
+        val lines = readSingleLineFile(file)
+            .map { it.split(" ") }
+            .map { it.map { i -> i.toLong() } }
 
-    val extrapolateHistoryWithReduce = extrapolateHistorySumWithReduce(allHistories)
-    println("extrapolated history: $extrapolateHistoryWithReduce")
-}
+        val allHistories = lines.map { mutableListOf(it) + calculateHistories(it) }
 
-private fun extrapolateFutureSum(allHistories: List<List<List<Long>>>): Long {
-    return allHistories.sumOf { histories -> histories.sumOf { history -> history.last() } }
-}
+        val extrapolateHistoryWithReduce = extrapolateHistorySumWithReduce(allHistories)
+        println("extrapolated history: $extrapolateHistoryWithReduce")
+        return extrapolateHistoryWithReduce
+    }
 
-private fun extrapolateHistorySum(allHistories: List<List<List<Long>>>): Long {
-    return allHistories.sumOf { histories ->
-        var tempHistory = 0L
-        for (i in histories.size - 2 downTo 0) {
-            val first = histories[i].first()
-            val delta = first - tempHistory
-            tempHistory = delta
+    private fun extrapolateFutureSum(allHistories: List<List<List<Long>>>): Long {
+        return allHistories.sumOf { histories -> histories.sumOf { history -> history.last() } }
+    }
+
+    private fun extrapolateHistorySumWithReduce(allHistories: List<List<List<Long>>>): Long {
+        return allHistories.sumOf { histories ->
+            histories.reversed()
+                .map { it.first() }
+                .reduce { acc, first -> first - acc }
         }
-        tempHistory
-    }
-}
-
-private fun extrapolateHistorySumWithReduce(allHistories: List<List<List<Long>>>): Long {
-    return allHistories.sumOf { histories ->
-        histories.reversed()
-            .map { it.first() }
-            .reduce { acc, first -> first - acc }
-    }
-}
-
-private fun calculateHistories(values: List<Long>): MutableList<MutableList<Long>> {
-    val history = mutableListOf<Long>()
-
-    for (i in 1 until values.size) {
-        history.add(values[i] - values[i - 1])
     }
 
-    if (history.all { it == 0L }) {
-        return mutableListOf(history)
-    }
+    private fun calculateHistories(values: List<Long>): MutableList<MutableList<Long>> {
+        val history = mutableListOf<Long>()
 
-    val histories = calculateHistories(history)
-    histories.add(0, history)
-    return histories
+        for (i in 1..<values.size) {
+            history.add(values[i] - values[i - 1])
+        }
+
+        if (history.all { it == 0L }) {
+            return mutableListOf(history)
+        }
+
+        val histories = calculateHistories(history)
+        histories.add(0, history)
+        return histories
+    }
 }
