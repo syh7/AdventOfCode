@@ -7,14 +7,14 @@ class Puzzle5Test {
     private val subject = Puzzle5()
 
     @Test
-    fun test() {
+    fun a() {
         assertEquals(143, subject.doA("test"))
-        assertEquals(123, subject.doB("test"))
+        assertEquals(5087, subject.doA("actual"))
     }
 
     @Test
-    fun actual() {
-        assertEquals(5087, subject.doA("actual"))
+    fun b() {
+        assertEquals(123, subject.doB("test"))
         assertEquals(4971, subject.doB("actual"))
     }
 }

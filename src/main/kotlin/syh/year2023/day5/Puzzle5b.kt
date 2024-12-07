@@ -33,8 +33,8 @@ fun main() {
 
     var lowestLocation: Long? = null
     seedRanges.forEach { seedRange ->
-        println("Checkign seed range $seedRange")
-        for (seed in seedRange.start until seedRange.start + seedRange.range) {
+        println("Checking seed range $seedRange")
+        for (seed in seedRange.start..<seedRange.start + seedRange.range) {
             if (seed % 1000000L == 0L) {
                 println("still working! $seed")
             }

@@ -8,14 +8,14 @@ class Puzzle7Test {
     private val subject = Puzzle7()
 
     @Test
-    fun test() {
+    fun a() {
         assertEquals(3749, subject.doA("test"))
-        assertEquals(11387, subject.doB("test"))
+        assertEquals(932137732557, subject.doA("actual"))
     }
 
     @Test
-    fun actual() {
-        assertEquals(932137732557, subject.doA("actual"))
+    fun b() {
+        assertEquals(11387, subject.doB("test"))
         assertEquals(661823605105500, subject.doB("actual"))
     }
 }
