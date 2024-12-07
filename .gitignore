@@ -1,6 +1,7 @@
 ### IntelliJ IDEA ###
 out/
 .idea
+.kotlin
 !**/src/main/**/out/
 !**/src/test/**/out/
 AdventOfCode.iml
@@ -29,3 +30,8 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
