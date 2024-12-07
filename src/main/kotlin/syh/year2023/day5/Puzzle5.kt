@@ -1,6 +1,8 @@
 package syh.year2023.day5
 
 import syh.AbstractAocDay
+import kotlin.math.max
+import kotlin.math.min
 
 class Puzzle5 : AbstractAocDay(2023, 5) {
     override fun doA(file: String): Long {
@@ -29,12 +31,14 @@ class Puzzle5 : AbstractAocDay(2023, 5) {
 
             } else {
                 val (destination, source, range) = line.split(" ").map { it.toLong() }
-                currentList.add(MapRange(destination, source, range))
+                currentList.add(MapRange(destination, source, source + range))
             }
 
             lineIndex++
         }
         maps[currentListName] = currentList
+
+        maps.map { it.value }.forEach { println(it) }
 
         val locationList = seeds.asSequence()
             .map { calculateNewValue(maps["seed-to-soil"]!!, it) }
@@ -73,37 +77,36 @@ class Puzzle5 : AbstractAocDay(2023, 5) {
 
             } else {
                 val (destination, source, range) = line.split(" ").map { it.toLong() }
-                currentList.add(MapRange(destination, source, range))
+                currentList.add(MapRange(destination, source, source + range))
             }
 
             lineIndex++
         }
         maps[currentListName] = currentList
 
-        var lowestLocation: Long? = null
-        seedRanges.forEach { seedRange ->
-            println("Checking seed range $seedRange")
-            for (seed in seedRange.start..<seedRange.start + seedRange.range) {
-                if (seed % 1000000L == 0L) {
-                    println("still working! $seed")
-                }
-                var tempLocation = seed
-                tempLocation = calculateNewValue(maps["seed-to-soil"]!!, tempLocation)
-                tempLocation = calculateNewValue(maps["soil-to-fertilizer"]!!, tempLocation)
-                tempLocation = calculateNewValue(maps["fertilizer-to-water"]!!, tempLocation)
-                tempLocation = calculateNewValue(maps["water-to-light"]!!, tempLocation)
-                tempLocation = calculateNewValue(maps["light-to-temperature"]!!, tempLocation)
-                tempLocation = calculateNewValue(maps["temperature-to-humidity"]!!, tempLocation)
-                tempLocation = calculateNewValue(maps["humidity-to-location"]!!, tempLocation)
-                if (lowestLocation == null || tempLocation < lowestLocation!!) {
-                    println("found lower location $tempLocation")
-                    lowestLocation = tempLocation
-                }
-            }
+        maps.map { it.value }.forEach { println(it) }
+
+        return smarterSeedRanges(seedRanges, maps)
+    }
+
+    private fun smarterSeedRanges(seedRanges: List<SeedRange>, maps: MutableMap<String, MutableList<MapRange>>): Long {
+        val resultRanges = mutableListOf<SeedRange>()
+        for (seedRange in seedRanges) {
+            var tempResult = mutableListOf(seedRange)
+            tempResult = calculateNewValue(maps["seed-to-soil"]!!, tempResult)
+            tempResult = calculateNewValue(maps["soil-to-fertilizer"]!!, tempResult)
+            tempResult = calculateNewValue(maps["fertilizer-to-water"]!!, tempResult)
+            tempResult = calculateNewValue(maps["water-to-light"]!!, tempResult)
+            tempResult = calculateNewValue(maps["light-to-temperature"]!!, tempResult)
+            tempResult = calculateNewValue(maps["temperature-to-humidity"]!!, tempResult)
+            tempResult = calculateNewValue(maps["humidity-to-location"]!!, tempResult)
+            resultRanges.addAll(tempResult)
         }
 
+        val lowestLocation = resultRanges.minBy { it.start }
+
         println(lowestLocation)
-        return lowestLocation!!.toLong()
+        return lowestLocation.start
     }
 
     private fun readSeeds(lines: List<String>): List<SeedRange> {
@@ -116,7 +119,9 @@ class Puzzle5 : AbstractAocDay(2023, 5) {
         val seeds = mutableListOf<SeedRange>()
         for (i in seedRanges.indices) {
             if (i % 2 == 1) {
-                seeds.add(SeedRange(seedRanges[i - 1].toLong(), seedRanges[i].toLong()))
+                val start = seedRanges[i - 1].toLong()
+                val range = seedRanges[i].toLong()
+                seeds.add(SeedRange(start, start + range))
             }
         }
 
@@ -125,12 +130,71 @@ class Puzzle5 : AbstractAocDay(2023, 5) {
     }
 
     private fun calculateNewValue(mapRanges: List<MapRange>, value: Long): Long {
-        return mapRanges.firstOrNull { it.contains(value) }?.calculate(value) ?: value
+        val applicableRange = mapRanges.firstOrNull { it.contains(value) }
+        applicableRange?.let { println("applicable range for value $value is range $applicableRange") }
+        val newValue = applicableRange?.calculate(value) ?: value
+        println("calculated new value from $value to $newValue")
+        return newValue
     }
 
-    data class MapRange(val destination: Long, val source: Long, val range: Long) {
+    private fun calculateNewValue(mapRanges: List<MapRange>, initSeeds: List<SeedRange>): MutableList<SeedRange> {
+        // instead of bruteforcing and checking each seed in the range
+        // only check beginnings and endings of intersecting intervals
+        // e.g.
+        // [begin1                                       end1) of seed range
+        //        [begin2       end2)                          of map range
+        // creates more ranges:
+        // [begin1, min(end1, begin2)] has not matched an interval, so just continue with this range
+        // [max(begin1, begin2), min(end1, end2)] has matched an interval, so update with the offset
+        // [max(end2, begin1), end1] has not matched an interval, so just continue with this range
+        // it is possible for a range to be empty (or negative), then it can be ignored
+
+        val result = mutableListOf<SeedRange>()
+        var leftoverSeedRange = initSeeds.toMutableList()
+
+        println("--------")
+        println("calculate new value for init seeds")
+        initSeeds.forEach { println(it) }
+
+        for (mapRange in mapRanges) {
+            val newSeeds = mutableListOf<SeedRange>()
+            for (seedRange in leftoverSeedRange) {
+                // create three new ranges if available
+                val seedBegin = seedRange.start
+                val seedEnd = seedRange.end
+                val mapBegin = mapRange.source
+                val mapEnd = mapRange.end
+
+                val rangeBefore = SeedRange(start = seedBegin, end = min(seedEnd, mapBegin))
+                val rangeInter = SeedRange(start = max(seedBegin, mapBegin), end = min(seedEnd, mapEnd))
+                val rangeAfter = SeedRange(start = max(seedEnd, mapBegin), end = seedEnd)
+
+                println("calculated before: $rangeBefore")
+                println("calculated inter: $rangeInter")
+                println("calculated after: $rangeAfter")
+
+                if (rangeBefore.valid()) newSeeds.add(rangeBefore)
+                if (rangeAfter.valid()) newSeeds.add(rangeAfter)
+
+                if (rangeInter.valid()) {
+                    val resultSeedRange = SeedRange(start = mapRange.calculate(rangeInter.start), end = mapRange.calculate(rangeInter.end))
+                    result.add(resultSeedRange)
+                }
+
+                if (!(rangeBefore.valid() || rangeInter.valid() || rangeAfter.valid())) {
+                    newSeeds.add(seedRange)
+                }
+            }
+            leftoverSeedRange = newSeeds
+            println()
+        }
+        result.addAll(leftoverSeedRange)
+        return result
+    }
+
+    data class MapRange(val destination: Long, val source: Long, val end: Long) {
         fun contains(value: Long): Boolean {
-            return value in source..<source + range
+            return value in source..<end
         }
 
         fun calculate(value: Long): Long {
@@ -138,10 +202,12 @@ class Puzzle5 : AbstractAocDay(2023, 5) {
         }
     }
 
-    data class SeedRange(val start: Long, val range: Long) {
+    data class SeedRange(val start: Long, val end: Long) {
         fun contains(value: Long): Boolean {
-            return value in start..<start + range
+            return value in start..<end
         }
+
+        fun valid(): Boolean = start < end
     }
 }
 
