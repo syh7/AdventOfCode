@@ -4,7 +4,7 @@ package syh.year2024.day7
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class Puzzle7Test {
+class Puzzle8Test {
     private val subject = Puzzle7()
 
     @Test
