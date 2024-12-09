@@ -10,16 +10,7 @@ class Puzzle9 : AbstractAocDay(2024, 9) {
 
         println(chars)
 
-        var counter = 0
-        val expandedStrings = chars.mapIndexed { index, c ->
-            if (index % 2 == 1) {
-                List(c) { "." }
-            } else {
-                val s = List(c) { "$counter" }
-                counter++
-                s
-            }
-        }
+        val expandedStrings = expandCharsToLists(chars)
 
         println(expandedStrings)
 
@@ -29,17 +20,13 @@ class Puzzle9 : AbstractAocDay(2024, 9) {
         var lastNumberIndex = charMap.size - 1
 
         while (startIndex <= lastNumberIndex) {
-//            println("checking index $startIndex")
             if (charMap[startIndex] == ".") {
-//                println("startindex $startIndex: " + charMap[startIndex])
                 while (charMap[lastNumberIndex] == ".") {
-//                    println("lowering last number index $lastNumberIndex: " + charMap[lastNumberIndex])
                     lastNumberIndex -= 1
                 }
                 if (lastNumberIndex < startIndex) {
                     break
                 }
-//                println("swapping index $startIndex with index $lastNumberIndex with number ${charMap[lastNumberIndex]}")
                 charMap[startIndex] = charMap[lastNumberIndex]
                 charMap[lastNumberIndex] = "."
             }
@@ -48,15 +35,7 @@ class Puzzle9 : AbstractAocDay(2024, 9) {
 
         println(charMap)
 
-        var total = 0L
-        counter = 0
-        for (s in charMap) {
-            if (s == ".") break
-            total += s.toInt() * counter
-            counter++
-        }
-
-        return total
+        return calculateChecksum(charMap)
     }
 
     override fun doB(file: String): Long {
@@ -65,20 +44,10 @@ class Puzzle9 : AbstractAocDay(2024, 9) {
 
         println(chars)
 
-        var counter = 0
-        val expandedStrings = chars.mapIndexed { index, c ->
-            if (index % 2 == 1) {
-                List(c) { "." }.toMutableList()
-            } else {
-                val s = List(c) { "$counter" }.toMutableList()
-                counter++
-                s
-            }
-        }.toMutableList()
+        val expandedStrings = expandCharsToLists(chars)
 
         println(expandedStrings)
-
-
+        
         var index = expandedStrings.size - 1
         while (index != 0) {
             if (expandedStrings[index].contains(".")) {
@@ -89,14 +58,14 @@ class Puzzle9 : AbstractAocDay(2024, 9) {
             println("trying to move index $index: " + expandedStrings[index])
             val size = expandedStrings[index].size
             val swapIndex = expandedStrings.indexOfFirst { it.count { c -> c == "." } >= size }
-            if (swapIndex == -1) {
+            if (swapIndex == -1 || swapIndex >= index) {
                 println("could not swap $index")
             } else {
                 val startSwapIndex = expandedStrings[swapIndex].indexOfFirst { c -> c == "." }
                 for (i in startSwapIndex..<startSwapIndex + size) {
                     expandedStrings[swapIndex][i] = expandedStrings[index][0]
                 }
-                expandedStrings[index] = List(size) { "." }.toMutableList()
+                expandedStrings[index] = MutableList(size) { "." }
             }
             index--
         }
@@ -105,15 +74,33 @@ class Puzzle9 : AbstractAocDay(2024, 9) {
 
         val charMap = expandedStrings.flatten().toMutableList()
 
+        return calculateChecksum(charMap)
+    }
+
+    private fun expandCharsToLists(chars: List<Int>): MutableList<MutableList<String>> {
+        var counter = 0
+        val expandedStrings = chars
+            .asSequence()
+            .mapIndexed { index, c ->
+                if (index % 2 == 1) {
+                    MutableList(c) { "." }
+                } else {
+                    val s = MutableList(c) { "$counter" }
+                    counter++
+                    s
+                }
+            }.toMutableList()
+        return expandedStrings
+    }
+
+    private fun calculateChecksum(charMap: MutableList<String>): Long {
         var total = 0L
-        counter = 0
+        var counter = -1
         for (s in charMap) {
+            counter++
             if (s == ".") continue
             total += s.toInt() * counter
-            counter++
         }
-
         return total
-
     }
 }
