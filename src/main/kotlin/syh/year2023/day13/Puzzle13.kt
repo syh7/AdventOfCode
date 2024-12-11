@@ -6,21 +6,21 @@ import syh.AbstractAocDay
 class Puzzle13 : AbstractAocDay(2023, 13) {
     private val ROCKS = "#"
     private val ASH = "."
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val patterns = readDoubleLineFile(file)
             .map { readPattern(it) }
 
         println()
-        return calculateSum(patterns, "part a")
+        return calculateSum(patterns, "part a").toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val patterns = readDoubleLineFile(file)
             .map { readPattern(it) }
         val alternativePatterns = patterns.map { findAlternativePattern(it) }
 
         println()
-        return calculateSum(alternativePatterns, "part b")
+        return calculateSum(alternativePatterns, "part b").toString()
     }
 
     private fun calculateSum(patterns: List<Pattern>, partStr: String): Long {

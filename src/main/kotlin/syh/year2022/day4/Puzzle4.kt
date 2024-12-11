@@ -1,31 +1,51 @@
 package syh.year2022.day4
 
-import syh.readSingleLineFile
+import syh.AbstractAocDay
 
-fun main() {
-    val lines = readSingleLineFile("year2022/day4/actual.txt")
+class Puzzle4 : AbstractAocDay(2022, 4) {
+    override fun doA(file: String): String {
+        val lines = readSingleLineFile(file)
 
-    val total = lines.map { it.split(",") }.count { split ->
-        val firstRange = calculateRange(split[0])
-        val secondRange = calculateRange(split[1])
-        val contains = firstRange.overlaps(secondRange) || secondRange.overlaps(firstRange)
-        println("$split contains each other $contains")
-        contains
+        val total = lines.map { it.split(",") }
+            .count { split ->
+                val firstRange = calculateRange(split[0])
+                val secondRange = calculateRange(split[1])
+                val contains = firstRange.contains(secondRange) || secondRange.contains(firstRange)
+                println("$split contains each other $contains")
+                contains
+            }
+
+        println("total: $total")
+        return total.toString()
     }
 
-    println("total: $total")
-}
+    override fun doB(file: String): String {
+        val lines = readSingleLineFile(file)
 
-private fun calculateRange(str: String): IntRange {
-    val (start, end) = str.split("-")
-    return start.toInt()..end.toInt()
-}
+        val total = lines.map { it.split(",") }
+            .count { split ->
+                val firstRange = calculateRange(split[0])
+                val secondRange = calculateRange(split[1])
+                val overlaps = firstRange.overlaps(secondRange) || secondRange.overlaps(firstRange)
+                println("$split overlaps $overlaps")
+                overlaps
+            }
 
-private fun IntRange.contains(other: IntRange): Boolean {
-    return other.first >= this.first && other.last <= this.last
-}
+        println("total: $total")
+        return total.toString()
+    }
 
-private fun IntRange.overlaps(other: IntRange): Boolean {
-    return (other.first >= this.first && other.first <= this.last)
-            || (other.last >= this.last && other.last <= this.first)
+    private fun calculateRange(str: String): IntRange {
+        val (start, end) = str.split("-")
+        return start.toInt()..end.toInt()
+    }
+
+    private fun IntRange.contains(other: IntRange): Boolean {
+        return other.first >= this.first && other.last <= this.last
+    }
+
+    private fun IntRange.overlaps(other: IntRange): Boolean {
+        return (other.first >= this.first && other.first <= this.last)
+                || (other.last >= this.last && other.last <= this.first)
+    }
 }

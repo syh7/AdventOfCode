@@ -4,18 +4,18 @@ import syh.AbstractAocDay
 
 
 class Puzzle11 : AbstractAocDay(2024, 11) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val stones = readSingleLineFile(file)[0]
             .split(" ").filter { it.isNotEmpty() }.map { it.toLong() }
 
-        return calculateNewStones(stones, 25)
+        return calculateNewStones(stones, 25).toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val stones = readSingleLineFile(file)[0]
             .split(" ").filter { it.isNotEmpty() }.map { it.toLong() }
 
-        return calculateNewStones(stones, 75)
+        return calculateNewStones(stones, 75).toString()
     }
 
     private fun calculateNewStones(stones: List<Long>, iterationsLeft: Int): Long {

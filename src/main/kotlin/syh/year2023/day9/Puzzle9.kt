@@ -3,7 +3,7 @@ package syh.year2023.day9
 import syh.AbstractAocDay
 
 class Puzzle9 : AbstractAocDay(2023, 9) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
             .map { it.split(" ") }
             .map { it.map { i -> i.toLong() } }
@@ -13,10 +13,10 @@ class Puzzle9 : AbstractAocDay(2023, 9) {
         val extrapolateFuture = extrapolateFutureSum(allHistories)
         println("extrapolated future: $extrapolateFuture")
 
-        return extrapolateFuture
+        return extrapolateFuture.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
             .map { it.split(" ") }
             .map { it.map { i -> i.toLong() } }
@@ -25,7 +25,7 @@ class Puzzle9 : AbstractAocDay(2023, 9) {
 
         val extrapolateHistoryWithReduce = extrapolateHistorySumWithReduce(allHistories)
         println("extrapolated history: $extrapolateHistoryWithReduce")
-        return extrapolateHistoryWithReduce
+        return extrapolateHistoryWithReduce.toString()
     }
 
     private fun extrapolateFutureSum(allHistories: List<List<List<Long>>>): Long {

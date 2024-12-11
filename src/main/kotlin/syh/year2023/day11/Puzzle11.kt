@@ -9,7 +9,7 @@ class Puzzle11 : AbstractAocDay(2023, 11) {
     private val GALAXY = "#"
     private val SPACE = "."
 
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file).map { line ->
             line.split("").filter { it.isNotEmpty() }.toMutableList()
         }.toMutableList()
@@ -28,10 +28,10 @@ class Puzzle11 : AbstractAocDay(2023, 11) {
         val totalDistance = distanceMap.values.sum()
 
         println("total distance for A is $totalDistance")
-        return totalDistance
+        return totalDistance.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file).map { line ->
             line.split("").filter { it.isNotEmpty() }.toMutableList()
         }.toMutableList()
@@ -50,7 +50,7 @@ class Puzzle11 : AbstractAocDay(2023, 11) {
         val totalDistance = distanceMap.values.sum()
 
         println("total distance for B is $totalDistance")
-        return totalDistance
+        return totalDistance.toString()
     }
 
     private fun createDistanceMap(

@@ -3,23 +3,23 @@ package syh.year2023.day1
 import syh.AbstractAocDay
 
 class Puzzle1 : AbstractAocDay(2023, 1) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val total = readSingleLineFile(file)
             .map { it.filter { char -> char.isDigit() } }
             .map { it.first() + "" + it.last() }
             .sumOf { it.toInt() }
         println("total: $total")
-        return total.toLong()
+        return total.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val total = readSingleLineFile(file)
             .map { convertString(it) }
             .map { it.filter { char -> char.isDigit() } }
             .map { it.first() + "" + it.last() }
             .sumOf { it.toInt() }
         println("total: $total")
-        return total.toLong()
+        return total.toString()
     }
 
     private fun convertString(str: String): String {

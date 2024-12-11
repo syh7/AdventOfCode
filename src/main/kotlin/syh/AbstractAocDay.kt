@@ -10,7 +10,7 @@ abstract class AbstractAocDay(val year: Int, val day: Int) {
         return {}.javaClass.classLoader.getResource("year$year/day$day/$file.txt")!!.readText().split("\r\n\r\n")
     }
 
-    abstract fun doA(file: String): Long
-    abstract fun doB(file: String): Long
+    abstract fun doA(file: String): String
+    abstract fun doB(file: String): String
 
 }

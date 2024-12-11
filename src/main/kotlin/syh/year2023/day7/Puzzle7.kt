@@ -4,7 +4,7 @@ import syh.AbstractAocDay
 
 
 class Puzzle7 : AbstractAocDay(2023, 7) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val hands = readSingleLineFile(file).map {
             val (cards, bid) = it.split(" ")
             Hand(cards, bid.toInt(), getType(cards))
@@ -16,10 +16,10 @@ class Puzzle7 : AbstractAocDay(2023, 7) {
 
         val total = hands.mapIndexed { index, hand -> (index + 1) * hand.bid }.sum()
         println("total: $total")
-        return total.toLong()
+        return total.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val hands = readSingleLineFile(file).map {
             val (cards, bid) = it.split(" ")
             Hand(cards, bid.toInt(), getTypeWithJoker(cards))
@@ -31,7 +31,7 @@ class Puzzle7 : AbstractAocDay(2023, 7) {
 
         val total = hands.mapIndexed { index, hand -> (index + 1) * hand.bid }.sum()
         println("total: $total")
-        return total.toLong()
+        return total.toString()
     }
 
     private fun getType(cards: String): HandType {

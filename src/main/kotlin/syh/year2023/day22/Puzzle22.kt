@@ -25,16 +25,16 @@ class Puzzle22 : AbstractAocDay(2023, 22) {
         return bricks
     }
 
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val bricks = readFallingBricks(file)
 
         // .all{} returns true if list is empty
         // so this checks both bricks that are not supporting anything, or bricks that are supporting more than 1 brick
         return bricks.filter { it.supporting.all { supported -> supported.supportedBy.size > 1 } }
-            .size.toLong()
+            .size.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val bricks = readFallingBricks(file)
         val higherBricks = bricks.filterNot { it.coords.any { coord -> coord.z == 1 } }.toSortedSet()
 
@@ -42,7 +42,7 @@ class Puzzle22 : AbstractAocDay(2023, 22) {
             val value = calculateDisintegratedBricks(it, higherBricks)
             println("brick ${it.identifier} would disintegrate $value other bricks")
             value
-        }.toLong()
+        }.toString()
     }
 
     private fun calculateDisintegratedBricks(startBrick: Brick, bricks: SortedSet<Brick>): Int {

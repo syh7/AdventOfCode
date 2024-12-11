@@ -10,7 +10,7 @@ class Puzzle14 : AbstractAocDay(2023, 14) {
     private val BOULDER = "O"
     private val EMPTY = "."
 
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
 
         val grid = mutableListOf<MutableList<String>>()
@@ -26,10 +26,10 @@ class Puzzle14 : AbstractAocDay(2023, 14) {
         val northTiltLoad = calculateLoadAfterSingleNorthTile(cloneGrid(grid))
         println("load on grid after single north tile: $northTiltLoad")
 
-        return northTiltLoad.toLong()
+        return northTiltLoad.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
 
         val grid = mutableListOf<MutableList<String>>()
@@ -44,7 +44,7 @@ class Puzzle14 : AbstractAocDay(2023, 14) {
 
         val cycleLoad = calculateLoadAfterCycles(cloneGrid(grid))
         println("total load on grid: $cycleLoad")
-        return cycleLoad.toLong()
+        return cycleLoad.toString()
     }
 
 

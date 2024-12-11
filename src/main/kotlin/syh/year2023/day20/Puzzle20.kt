@@ -4,7 +4,7 @@ import syh.AbstractAocDay
 import syh.calculateLCM
 
 class Puzzle20 : AbstractAocDay(2023, 20) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
 
         val flipFlopModules = mutableListOf<FlipFlopModule>()
@@ -66,12 +66,12 @@ class Puzzle20 : AbstractAocDay(2023, 20) {
         println("total high pulses = $totalHighPulses")
         println("Multiplication: ${totalLowPulses * totalHighPulses}")
         println("Addition: ${totalLowPulses + totalHighPulses}")
-        return totalLowPulses * totalHighPulses
+        return (totalLowPulses * totalHighPulses).toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
-        return part2(lines)
+        return part2(lines).toString()
     }
 
 

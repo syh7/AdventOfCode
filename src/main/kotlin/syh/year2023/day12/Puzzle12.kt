@@ -8,7 +8,7 @@ class Puzzle12 : AbstractAocDay(2023, 12) {
     private val EMPTY = '.'
     private val OPTIONAL = '?'
 
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val springArrangements = readSingleLineFile(file)
             .map { line ->
                 val split = line.split(" ")
@@ -32,10 +32,10 @@ class Puzzle12 : AbstractAocDay(2023, 12) {
         }
 
         println("total different arrangements for plain string: $total")
-        return total
+        return total.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val springArrangements = readSingleLineFile(file)
             .map { line ->
                 val split = line.split(" ")
@@ -60,7 +60,7 @@ class Puzzle12 : AbstractAocDay(2023, 12) {
         }
 
         println("total different arrangements for expanded string: $total")
-        return total
+        return total.toString()
     }
 
     private fun smartishDifferentSpringOptions(

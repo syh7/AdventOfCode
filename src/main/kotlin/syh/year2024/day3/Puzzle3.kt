@@ -3,7 +3,7 @@ package syh.year2024.day3
 import syh.AbstractAocDay
 
 class Puzzle3 : AbstractAocDay(2024, 3) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val regex = Regex("mul\\(\\d{1,3},\\d{1,3}\\)")
         val memory = readSingleLineFile(file).joinToString()
 
@@ -17,10 +17,10 @@ class Puzzle3 : AbstractAocDay(2024, 3) {
             }
             .sum()
 
-        return total.toLong()
+        return total.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val regex = Regex("mul\\(\\d{1,3},\\d{1,3}\\)|don't\\(\\)|do\\(\\)")
         val memory = readSingleLineFile(file).joinToString()
 
@@ -40,6 +40,6 @@ class Puzzle3 : AbstractAocDay(2024, 3) {
             }
         }
 
-        return total.toLong()
+        return total.toString()
     }
 }

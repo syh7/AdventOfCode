@@ -6,7 +6,7 @@ import syh.AbstractAocDay
 typealias Graph = MutableList<MutableList<Puzzle10.Node>>
 
 class Puzzle10 : AbstractAocDay(2024, 10) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         println("reading file $file")
         val graph = readSingleLineFile(file)
             .map { it.split("").filter { c -> c.isNotEmpty() } }
@@ -24,10 +24,10 @@ class Puzzle10 : AbstractAocDay(2024, 10) {
         }
         println()
         println()
-        return totalTrails.map { it.value.size }.sum().toLong()
+        return totalTrails.map { it.value.size }.sum().toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         println("reading file $file")
         val graph = readSingleLineFile(file)
             .map { it.split("").filter { c -> c.isNotEmpty() } }
@@ -44,7 +44,7 @@ class Puzzle10 : AbstractAocDay(2024, 10) {
         }
         println()
         println()
-        return totalTrails.map { it.value }.sum().toLong()
+        return totalTrails.map { it.value }.sum().toString()
     }
 
     private fun walkToEnding(currentNode: Node, graph: Graph): Set<Node> {

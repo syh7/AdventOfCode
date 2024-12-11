@@ -4,7 +4,7 @@ import syh.AbstractAocDay
 
 
 class Puzzle9 : AbstractAocDay(2024, 9) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val chars = readSingleLineFile(file)
             .map { it.split("").filter { c -> c.isNotEmpty() }.map { c -> c.toInt() } }[0]
 
@@ -35,10 +35,10 @@ class Puzzle9 : AbstractAocDay(2024, 9) {
 
         println(charMap)
 
-        return calculateChecksum(charMap)
+        return calculateChecksum(charMap).toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val chars = readSingleLineFile(file)
             .map { it.split("").filter { c -> c.isNotEmpty() }.map { c -> c.toInt() } }[0]
 
@@ -47,7 +47,7 @@ class Puzzle9 : AbstractAocDay(2024, 9) {
         val expandedStrings = expandCharsToLists(chars)
 
         println(expandedStrings)
-        
+
         var index = expandedStrings.size - 1
         while (index != 0) {
             if (expandedStrings[index].contains(".")) {
@@ -74,7 +74,7 @@ class Puzzle9 : AbstractAocDay(2024, 9) {
 
         val charMap = expandedStrings.flatten().toMutableList()
 
-        return calculateChecksum(charMap)
+        return calculateChecksum(charMap).toString()
     }
 
     private fun expandCharsToLists(chars: List<Int>): MutableList<MutableList<String>> {

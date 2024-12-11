@@ -4,7 +4,7 @@ import syh.AbstractAocDay
 
 
 class Puzzle7 : AbstractAocDay(2024, 7) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val equations = readSingleLineFile(file)
             .map {
                 val (expected, numbers) = it.split(": ")
@@ -14,10 +14,10 @@ class Puzzle7 : AbstractAocDay(2024, 7) {
         correctEquations.forEach { println(it) }
         val sum = correctEquations.sumOf { it.first }
         println("total correct equations for B: ${correctEquations.size} for a grand total of $sum")
-        return sum
+        return sum.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val equations = readSingleLineFile(file)
             .map {
                 val (expected, numbers) = it.split(": ")
@@ -27,7 +27,7 @@ class Puzzle7 : AbstractAocDay(2024, 7) {
         correctEquations.forEach { println(it) }
         val sum = correctEquations.sumOf { it.first }
         println("total correct equations for B: ${correctEquations.size} for a grand total of $sum")
-        return sum
+        return sum.toString()
     }
 
     private fun solveEquationA(expectedResult: Long, currentResult: Long, leftoverValues: List<Long>): Boolean {

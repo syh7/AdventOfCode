@@ -4,7 +4,7 @@ import syh.AbstractAocDay
 
 
 class Puzzle6 : AbstractAocDay(2023, 6) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
         val records = readRecordForA(lines)
 
@@ -14,10 +14,10 @@ class Puzzle6 : AbstractAocDay(2023, 6) {
             .reduce { acc, element -> element * acc }
 
         println("total: $total")
-        return total
+        return total.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
         val records = readRecordForB(lines)
 
@@ -27,7 +27,7 @@ class Puzzle6 : AbstractAocDay(2023, 6) {
             .reduce { acc, element -> element * acc }
 
         println("total: $total")
-        return total
+        return total.toString()
     }
 
     private fun readRecordForA(lines: List<String>): List<TimeDistanceRecord> {

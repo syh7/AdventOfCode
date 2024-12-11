@@ -3,7 +3,7 @@ package syh.year2023.day19
 import syh.AbstractAocDay
 
 class Puzzle19 : AbstractAocDay(2023, 19) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
 
         val (workflows, parts) = readWorkflowsAndParts(lines)
@@ -11,10 +11,10 @@ class Puzzle19 : AbstractAocDay(2023, 19) {
         workflows.forEach { println(it) }
         parts.forEach { println(it) }
 
-        return partA(parts, workflows)
+        return partA(parts, workflows).toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
 
         val (workflows, _) = readWorkflowsAndParts(lines)
@@ -27,7 +27,7 @@ class Puzzle19 : AbstractAocDay(2023, 19) {
 
         val totalDifferentAcceptedOptions = partB("in", workflows, baseConstraints)
         println(totalDifferentAcceptedOptions)
-        return totalDifferentAcceptedOptions
+        return totalDifferentAcceptedOptions.toString()
     }
 
 

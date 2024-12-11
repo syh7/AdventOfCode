@@ -9,19 +9,19 @@ class Puzzle10Test {
 
     @Test
     fun a() {
-        assertEquals(2, subject.doA("test1"))
-        assertEquals(4, subject.doA("test2"))
-        assertEquals(3, subject.doA("test3"))
-        assertEquals(36, subject.doA("test4"))
-        assertEquals(760, subject.doA("actual"))
+        assertEquals("2", subject.doA("test1"))
+        assertEquals("4", subject.doA("test2"))
+        assertEquals("3", subject.doA("test3"))
+        assertEquals("36", subject.doA("test4"))
+        assertEquals("760", subject.doA("actual"))
     }
 
     @Test
     fun b() {
-        assertEquals(3, subject.doB("test5"))
-        assertEquals(13, subject.doB("test6"))
-        assertEquals(227, subject.doB("test7"))
-        assertEquals(81, subject.doB("test4"))
-        assertEquals(1764, subject.doB("actual"))
+        assertEquals("3", subject.doB("test5"))
+        assertEquals("13", subject.doB("test6"))
+        assertEquals("227", subject.doB("test7"))
+        assertEquals("81", subject.doB("test4"))
+        assertEquals("1764", subject.doB("actual"))
     }
 }

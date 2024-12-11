@@ -4,14 +4,14 @@ import syh.AbstractAocDay
 
 
 class Puzzle6 : AbstractAocDay(2024, 6) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val (start, graph) = readStartAndGraph(file)
         val path = calculatePath(start, graph)
         println("total length for distinct path A = ${path.distinct().size}")
-        return path.distinct().size.toLong()
+        return path.distinct().size.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val (start, graph) = readStartAndGraph(file)
         val path = calculatePath(start, graph)
         var totalObstacles = 0L
@@ -22,7 +22,7 @@ class Puzzle6 : AbstractAocDay(2024, 6) {
             }
         }
         println("total obstacles: $totalObstacles")
-        return totalObstacles
+        return totalObstacles.toString()
     }
 
     private fun readStartAndGraph(file: String): Pair<Coord, List<List<Location>>> {

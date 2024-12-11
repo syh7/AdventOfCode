@@ -5,7 +5,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 class Puzzle5 : AbstractAocDay(2023, 5) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
 
         val seeds = lines[0]
@@ -52,10 +52,10 @@ class Puzzle5 : AbstractAocDay(2023, 5) {
 
         println(locationList)
         println(locationList.min())
-        return locationList.min()
+        return locationList.min().toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
 
         val seedRanges = readSeeds(lines)
@@ -86,7 +86,7 @@ class Puzzle5 : AbstractAocDay(2023, 5) {
 
         maps.map { it.value }.forEach { println(it) }
 
-        return smarterSeedRanges(seedRanges, maps)
+        return smarterSeedRanges(seedRanges, maps).toString()
     }
 
     private fun smarterSeedRanges(seedRanges: List<SeedRange>, maps: MutableMap<String, MutableList<MapRange>>): Long {

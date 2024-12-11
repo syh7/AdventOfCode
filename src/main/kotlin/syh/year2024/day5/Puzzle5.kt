@@ -3,7 +3,7 @@ package syh.year2024.day5
 import syh.AbstractAocDay
 
 class Puzzle5 : AbstractAocDay(2024, 5) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val (orderingLines, manualLines) = readDoubleLineFile(file)
         val ordering = orderingLines.split("\r\n")
             .map {
@@ -19,10 +19,10 @@ class Puzzle5 : AbstractAocDay(2024, 5) {
         val totalCorrect = correctManuals.sumOf { it[it.size / 2] }
         println("total for A: $totalCorrect")
 
-        return totalCorrect.toLong()
+        return totalCorrect.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val (orderingLines, manualLines) = readDoubleLineFile(file)
         val ordering = orderingLines.split("\r\n")
             .map {
@@ -39,7 +39,7 @@ class Puzzle5 : AbstractAocDay(2024, 5) {
             .map { improveManual(it, ordering) }
             .sumOf { it[it.size / 2] }
         println("total for B: $totalIncorrect")
-        return totalIncorrect.toLong()
+        return totalIncorrect.toString()
     }
 
 

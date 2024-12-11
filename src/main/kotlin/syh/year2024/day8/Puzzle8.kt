@@ -4,7 +4,7 @@ import syh.AbstractAocDay
 
 
 class Puzzle8 : AbstractAocDay(2024, 8) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val graph = readGraph(file)
 
         val antennaGroups = graph.flatten().filter { it.antenna }.groupBy { it.frequency }
@@ -37,10 +37,10 @@ class Puzzle8 : AbstractAocDay(2024, 8) {
             println("$i: ${graph[i].map { if (it.antiNode) '#' else it.frequency }}")
         }
 
-        return graph.flatten().count { it.antiNode }.toLong()
+        return graph.flatten().count { it.antiNode }.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val graph = readGraph(file)
 
         val antennaGroups = graph.flatten().filter { it.antenna }.groupBy { it.frequency }
@@ -68,7 +68,7 @@ class Puzzle8 : AbstractAocDay(2024, 8) {
             println("$i: ${graph[i].map { if (it.antiNode) '#' else it.frequency }.joinToString("")}")
         }
 
-        return graph.flatten().count { it.antiNode }.toLong()
+        return graph.flatten().count { it.antiNode }.toString()
     }
 
     private fun setAntinode(startX: Int, startY: Int, deltaX: Int, deltaY: Int, graph: MutableList<MutableList<Node>>) {

@@ -7,7 +7,7 @@ import java.math.BigDecimal
 typealias Graph = MutableList<MutableList<Puzzle21.Node>>
 
 class Puzzle21 : AbstractAocDay(2023, 21) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
             .map { it.split("").filter { c -> c.isNotEmpty() } }
 
@@ -21,10 +21,10 @@ class Puzzle21 : AbstractAocDay(2023, 21) {
 //    graph.forEach { line -> println(line.joinToString("") { it.toPreviousDirectionStr() }) }
 //    graph.forEach { line -> println(line.joinToString("") { it.toPreviousAndDistanceStr() }) }
 
-        return partA(graph)
+        return partA(graph).toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
             .map { it.split("").filter { c -> c.isNotEmpty() } }
 
@@ -38,7 +38,7 @@ class Puzzle21 : AbstractAocDay(2023, 21) {
 //    graph.forEach { line -> println(line.joinToString("") { it.toPreviousDirectionStr() }) }
 //    graph.forEach { line -> println(line.joinToString("") { it.toPreviousAndDistanceStr() }) }
 
-        return partB(graph)
+        return partB(graph).toString()
     }
 
     private fun partA(graph: Graph): Long {

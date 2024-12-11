@@ -4,7 +4,7 @@ import syh.AbstractAocDay
 import kotlin.math.pow
 
 class Puzzle4 : AbstractAocDay(2023, 4) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val cards = readSingleLineFile(file)
             .map { readCard(it) }
         cards.forEach { println(it) }
@@ -16,10 +16,10 @@ class Puzzle4 : AbstractAocDay(2023, 4) {
             points
         }
         println("total: $total")
-        return total.toLong()
+        return total.toInt().toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val cards = readSingleLineFile(file)
             .map { readCard(it) }
         cards.forEach { println(it) }
@@ -39,7 +39,7 @@ class Puzzle4 : AbstractAocDay(2023, 4) {
         val total = cardMultiplier.values.sum()
 
         println("total: $total")
-        return total.toLong()
+        return total.toString()
     }
 
     data class Card(

@@ -3,7 +3,7 @@ package syh.year2023.day10
 import syh.AbstractAocDay
 
 class Puzzle10 : AbstractAocDay(2023, 10) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
 
         val grid: Grid = mutableListOf()
@@ -23,10 +23,10 @@ class Puzzle10 : AbstractAocDay(2023, 10) {
         grid.forEach { it.prettyPrint() }
 
         println("pipe that is max distance from the start: $maxDistancePipe")
-        return maxDistancePipe.distance.toLong()
+        return maxDistancePipe.distance.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
 
         val grid: Grid = mutableListOf()
@@ -49,7 +49,7 @@ class Puzzle10 : AbstractAocDay(2023, 10) {
 
         println("pipe that is max distance from the start: $maxDistancePipe")
         println("number of tiles enclosed by the circle: $enclosedTiles")
-        return enclosedTiles.toLong()
+        return enclosedTiles.toString()
     }
 
     private fun countEnclosedTiles(grid: Grid, circle: List<Pipe>): Int {

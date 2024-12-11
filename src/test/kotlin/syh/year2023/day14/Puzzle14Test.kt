@@ -9,13 +9,13 @@ class Puzzle14Test {
 
     @Test
     fun a() {
-        assertEquals(136, subject.doA("test"))
-        assertEquals(110565, subject.doA("actual"))
+        assertEquals("136", subject.doA("test"))
+        assertEquals("110565", subject.doA("actual"))
     }
 
     @Test
     fun b() {
-        assertEquals(64, subject.doB("test"))
-        assertEquals(89845, subject.doB("actual"))
+        assertEquals("64", subject.doB("test"))
+        assertEquals("89845", subject.doB("actual"))
     }
 }

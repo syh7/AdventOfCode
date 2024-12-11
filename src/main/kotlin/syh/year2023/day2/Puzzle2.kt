@@ -3,22 +3,22 @@ package syh.year2023.day2
 import syh.AbstractAocDay
 
 class Puzzle2 : AbstractAocDay(2023, 2) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val total = readSingleLineFile(file)
             .map { readGame(it) }
             .filter { gameIsPossible(it) }
             .sumOf { it.id }
         println("total: $total")
-        return total.toLong()
+        return total.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val total = readSingleLineFile(file)
             .map { readGame(it) }
             .map { getMinimumSet(it) }
             .sumOf { it.reds * it.greens * it.blues }
         println("total: $total")
-        return total.toLong()
+        return total.toString()
     }
 
     private fun gameIsPossible(game: Game): Boolean {

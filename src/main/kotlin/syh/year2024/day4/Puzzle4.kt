@@ -3,7 +3,7 @@ package syh.year2024.day4
 import syh.AbstractAocDay
 
 class Puzzle4 : AbstractAocDay(2024, 4) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val chars: List<List<String>> = readSingleLineFile(file)
             .map { it.split("") }
 
@@ -16,10 +16,10 @@ class Puzzle4 : AbstractAocDay(2024, 4) {
             }
         }
         println("total = $totalXmasCount")
-        return totalXmasCount.toLong()
+        return totalXmasCount.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val chars: List<List<String>> = readSingleLineFile(file)
             .map { it.split("") }
 
@@ -32,7 +32,7 @@ class Puzzle4 : AbstractAocDay(2024, 4) {
             }
         }
         println("total = $totalXmasCount")
-        return totalXmasCount.toLong()
+        return totalXmasCount.toString()
     }
 
 

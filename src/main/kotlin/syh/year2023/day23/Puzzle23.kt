@@ -6,7 +6,7 @@ import syh.AbstractAocDay
 typealias Graph = MutableList<MutableList<Puzzle23.Node>>
 
 class Puzzle23 : AbstractAocDay(2023, 23) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
             .map { it.split("").filter { c -> c.isNotEmpty() } }
 
@@ -20,10 +20,10 @@ class Puzzle23 : AbstractAocDay(2023, 23) {
         val maxPath = dfsOptimized(junctionGraph, startNode, endNode, mutableMapOf())!!
 
         println("max length is $maxPath")
-        return maxPath.toLong()
+        return maxPath.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
             .map { it.split("").filter { c -> c.isNotEmpty() } }
 
@@ -37,7 +37,7 @@ class Puzzle23 : AbstractAocDay(2023, 23) {
         val maxPath = dfsOptimized(junctionGraph, startNode, endNode, mutableMapOf())!!
 
         println("max length is $maxPath")
-        return maxPath.toLong()
+        return maxPath.toString()
     }
 
     data class Node(

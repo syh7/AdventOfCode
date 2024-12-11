@@ -6,18 +6,18 @@ import kotlin.math.abs
 
 
 class Puzzle18 : AbstractAocDay(2023, 18) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
 
         println("part a:")
-        return calculateTotalArea(lines) { line -> lineParserPartA(line) }
+        return calculateTotalArea(lines) { line -> lineParserPartA(line) }.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
 
         println("part a:")
-        return calculateTotalArea(lines) { line -> lineParserPartB(line) }
+        return calculateTotalArea(lines) { line -> lineParserPartB(line) }.toString()
     }
 
 

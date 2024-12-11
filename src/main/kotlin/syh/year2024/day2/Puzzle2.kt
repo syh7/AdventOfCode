@@ -4,24 +4,24 @@ import syh.AbstractAocDay
 import kotlin.math.absoluteValue
 
 class Puzzle2 : AbstractAocDay(2024, 2) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val reports = readSingleLineFile(file)
             .map {
                 it.split(" ").map { n -> n.toInt() }
             }
         val safeReports = reports.count { isSafe(it) }
         println("total: $safeReports")
-        return safeReports.toLong()
+        return safeReports.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val reports = readSingleLineFile(file)
             .map {
                 it.split(" ").map { n -> n.toInt() }
             }
         val safeReports = reports.count { isRecursiveSafe(it) }
         println("total: $safeReports")
-        return safeReports.toLong()
+        return safeReports.toString()
     }
 
     private fun isSafe(list: List<Int>): Boolean {

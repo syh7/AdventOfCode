@@ -12,7 +12,7 @@ class Puzzle16 : AbstractAocDay(2023, 16) {
     private val MIRROR_EAST_WEST = "-"
     private val MIRROR_NORTH_SOUTH = "|"
 
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
 
         val grid: Grid = mutableListOf()
@@ -31,10 +31,10 @@ class Puzzle16 : AbstractAocDay(2023, 16) {
         traverseEnergyPath(grid, Pair(grid[0][0], "EAST"))
         val totalEnergized = countEnergizedCells(grid)
         println("total energized for part A = $totalEnergized")
-        return totalEnergized.toLong()
+        return totalEnergized.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
 
         val grid: Grid = mutableListOf()
@@ -85,7 +85,7 @@ class Puzzle16 : AbstractAocDay(2023, 16) {
         }
 
         println("total energized for part B = $maxEnergized")
-        return maxEnergized.toLong()
+        return maxEnergized.toString()
     }
 
 

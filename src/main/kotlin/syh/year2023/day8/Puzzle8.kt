@@ -4,7 +4,7 @@ import syh.AbstractAocDay
 import syh.calculateLCM
 
 class Puzzle8 : AbstractAocDay(2023, 8) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
 
         val instructionOrderList = lines[0].split("").filter { it.isNotEmpty() }
@@ -18,10 +18,10 @@ class Puzzle8 : AbstractAocDay(2023, 8) {
         val stepsA = calculateSteps(map, instructionOrderList, map["AAA"]!!, endValidation)
         println(stepsA)
 
-        return stepsA.toLong()
+        return stepsA.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
 
         val instructionOrderList = lines[0].split("").filter { it.isNotEmpty() }
@@ -38,7 +38,7 @@ class Puzzle8 : AbstractAocDay(2023, 8) {
         val lcm = calculateLCM(allEndsB.map { it.toLong() })
         println(lcm)
 
-        return lcm
+        return lcm.toString()
     }
 
     private fun readOptions(lines: List<String>): MutableMap<String, Option> {

@@ -3,7 +3,7 @@ package syh.year2023.day3
 import syh.AbstractAocDay
 
 class Puzzle3 : AbstractAocDay(2023, 3) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val lines = readSingleLineFile(file)
             .map { ".$it." } // add . at beginning and end for simpler border checking
             .toMutableList()
@@ -14,7 +14,7 @@ class Puzzle3 : AbstractAocDay(2023, 3) {
         println("padded lines")
         println()
 
-        var total = 0;
+        var total = 0
 
         var lineIndex = 1
         while (lineIndex < lines.size) {
@@ -47,10 +47,10 @@ class Puzzle3 : AbstractAocDay(2023, 3) {
             lineIndex++
         }
         println("total: $total")
-        return total.toLong()
+        return total.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val lines = readSingleLineFile(file)
             .map { ".$it." } // add . at beginning and end for simpler border checking
             .toMutableList()
@@ -62,9 +62,7 @@ class Puzzle3 : AbstractAocDay(2023, 3) {
         lines.forEach { println(it) }
         println()
 
-
-        var total = 0;
-
+        var total = 0
 
         var gearLineIndex = 1
         while (gearLineIndex < lines.size) {
@@ -119,7 +117,7 @@ class Puzzle3 : AbstractAocDay(2023, 3) {
         }
 
         println("total: $total")
-        return total.toLong()
+        return total.toString()
     }
 
 

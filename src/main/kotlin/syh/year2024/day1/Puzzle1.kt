@@ -4,7 +4,7 @@ import syh.AbstractAocDay
 import kotlin.math.absoluteValue
 
 class Puzzle1 : AbstractAocDay(2024, 1) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val (leftList, rightList) = readLeftAndRightList(file)
 
         val differences = mutableListOf<Int>()
@@ -13,10 +13,10 @@ class Puzzle1 : AbstractAocDay(2024, 1) {
         }
         val totalDifferences = differences.sumOf { it.absoluteValue }
         println("total: $totalDifferences")
-        return totalDifferences.toLong()
+        return totalDifferences.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val (leftList, rightList) = readLeftAndRightList(file)
 
         val similarityList = mutableListOf<Int>()
@@ -27,7 +27,7 @@ class Puzzle1 : AbstractAocDay(2024, 1) {
 
         val totalDifferences = similarityList.sum()
         println("total: $totalDifferences")
-        return totalDifferences.toLong()
+        return totalDifferences.toString()
     }
 
     private fun readLeftAndRightList(file: String): Pair<MutableList<Int>, MutableList<Int>> {

@@ -3,16 +3,16 @@ package syh.year2023.day15
 import syh.AbstractAocDay
 
 class Puzzle15 : AbstractAocDay(2023, 15) {
-    override fun doA(file: String): Long {
+    override fun doA(file: String): String {
         val instructions = readSingleLineFile(file)[0].split(",")
 
         val totalSum = instructions.sumOf { calculateHash(it) }
         println("total hash sum is $totalSum")
 
-        return totalSum.toLong()
+        return totalSum.toString()
     }
 
-    override fun doB(file: String): Long {
+    override fun doB(file: String): String {
         val instructions = readSingleLineFile(file)[0].split(",")
 
         val boxes = HashMap<Int, LinkedHashMap<String, Int>>(256)
@@ -47,7 +47,7 @@ class Puzzle15 : AbstractAocDay(2023, 15) {
             }
         }
         println("total focus: $totalFocus")
-        return totalFocus.toLong()
+        return totalFocus.toString()
     }
 
     private fun calculateHash(instruction: String): Int {
