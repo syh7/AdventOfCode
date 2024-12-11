@@ -11,30 +11,27 @@ class Puzzle22 : AbstractAocDay(2023, 22) {
             .mapIndexed { index, str -> mapToBrick(str, index) }
             .toSortedSet()
 
+        println("bricks after reading")
         bricks.forEach { println(it) }
 
-        bricks.forEach { makeBrickFall(it, bricks) }
+        // group by lowest z, so we can make multiple parallelize falling
+        bricks.groupBy { it.coords.first().z }.values
+            .forEach { brickList -> brickList.parallelStream().forEach { makeBrickFall(it, bricks) } }
         fillSupportingBricks(bricks)
+
+        println("bricks after falling:")
+        bricks.forEach { println(it) }
+
         return bricks
     }
 
     override fun doA(file: String): Long {
         val bricks = readFallingBricks(file)
-        val notSupportingBricks = bricks.filter { it.supporting.isEmpty() }
-        val doubleSupportingBricks = bricks.filter { it.supporting.all { supported -> supported.supportedBy.size > 1 } }
 
-        println("not supporting bricks:")
-        notSupportingBricks.forEach { println(it) }
-        println("double supporting bricks:")
-        doubleSupportingBricks.forEach { println(it) }
-
-        val resultSet = mutableSetOf<Brick>()
-        resultSet.addAll(notSupportingBricks)
-        resultSet.addAll(doubleSupportingBricks)
-        println("resultSet:")
-        resultSet.forEach { println(it) }
-
-        return resultSet.size.toLong()
+        // .all{} returns true if list is empty
+        // so this checks both bricks that are not supporting anything, or bricks that are supporting more than 1 brick
+        return bricks.filter { it.supporting.all { supported -> supported.supportedBy.size > 1 } }
+            .size.toLong()
     }
 
     override fun doB(file: String): Long {
@@ -53,7 +50,7 @@ class Puzzle22 : AbstractAocDay(2023, 22) {
 
         var disintegrated = 0
         val disintegratingBricks = mutableSetOf(startBrick)
-        
+
         while (disintegratingBricks.isNotEmpty()) {
             disintegrated++
             val brick = disintegratingBricks.first().also { disintegratingBricks.remove(it) }
@@ -96,10 +93,11 @@ class Puzzle22 : AbstractAocDay(2023, 22) {
             }
 
             if (intersects) {
-                println("brick would intersect, so stop falling at z=${brick.coords.first().z}")
+//                println("brick would intersect, so stop falling at z=${brick.coords.first().z}")
                 break
             }
 
+//            println("lowering brick ${brick.identifier} to z ${brick.coords.first().z}")
             brick.coords.forEach { it.lower() }
         }
     }
