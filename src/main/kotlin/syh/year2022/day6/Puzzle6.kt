@@ -1,32 +1,47 @@
 package syh.year2022.day6
 
-import syh.readSingleLineFile
+import syh.AbstractAocDay
 
 
-fun main() {
-    val line = readSingleLineFile("year2022/day6/actual.txt")[0]
-    val markerLength = 14 // change to 4 for 6A
+class Puzzle6 : AbstractAocDay(2022, 6) {
+    override fun doA(file: String): String {
+        val line = readSingleLineFile(file)[0]
+        val markerLength = 4
 
-    val chars = line.split("")
-
-    var index = 0
-    val knownChars = mutableSetOf<String>()
-    while (knownChars.size < markerLength) {
-        index++
-        knownChars.add(chars[index])
+        return findMarkerIndex(line, markerLength)
     }
 
-    println("Found 4 different characters $knownChars at index $index")
+    override fun doB(file: String): String {
+        val line = readSingleLineFile(file)[0]
+        val markerLength = 14
 
-    val markerIndex: Int
-    while (true) {
-        val subList = chars.subList(index - markerLength + 1, index + 1)
-        if (subList.toSet().size == markerLength) {
-            markerIndex = index
-            break
+        return findMarkerIndex(line, markerLength)
+    }
+
+    private fun findMarkerIndex(line: String, length: Int): String {
+        val chars = line.split("")
+
+        var index = 0
+        val knownChars = mutableSetOf<String>()
+        while (knownChars.size < length) {
+            index++
+            knownChars.add(chars[index])
         }
-        index++
+
+        println("Found $length different characters $knownChars at index $index")
+
+        val markerIndex: Int
+        while (true) {
+            val subList = chars.subList(index - length + 1, index + 1)
+            if (subList.toSet().size == length) {
+                markerIndex = index
+                break
+            }
+            index++
+        }
+
+        println("marker found at $markerIndex")
+        return markerIndex.toString()
     }
 
-    println("marker found at $markerIndex")
 }
