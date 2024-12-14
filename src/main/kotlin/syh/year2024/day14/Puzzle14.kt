@@ -74,6 +74,7 @@ class Puzzle14 : AbstractAocDay(2024, 14) {
             if (positionMap.values.all { it.size == 1 }) {
                 println("found position where all robots have a unique position:")
                 positionMap.forEach { println(it) }
+                println("steps needed: $steps")
                 return steps.toString()
             }
             steps++
