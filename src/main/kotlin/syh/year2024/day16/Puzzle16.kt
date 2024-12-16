@@ -54,6 +54,8 @@ class Puzzle16 : AbstractAocDay(2024, 16) {
 
         var lowestResult = Int.MAX_VALUE
 
+        println("checking node ${current.toFullString()}")
+
         val neighbours = graph[current]!!.filterNot { seen.keys.contains(it.key) }
         for (neighbour in neighbours) {
             seen[neighbour.key] = neighbour.value
@@ -145,22 +147,26 @@ class Puzzle16 : AbstractAocDay(2024, 16) {
     private fun makeJunctionGraph(graph: MutableList<MutableList<Node>>, findNeighbours: (Node, MutableList<MutableList<Node>>) -> List<Node>): MutableMap<Node, MutableMap<Node, Int>> {
         val adjacencies = graph.indices.flatMap { y ->
             graph[0].indices.mapNotNull { x ->
-                if (graph[x][y].str != "#") {
-                    val neighbours = findNeighbours(graph[x][y], graph)
+                if (graph[y][x].str != "#") {
+                    val neighbours = findNeighbours(graph[y][x], graph)
                     graph[x][y] to neighbours.associateWith { 1 }.toMutableMap()
                 } else null
             }
         }.toMap(mutableMapOf())
 
         adjacencies.keys.toList().forEach { key ->
-            adjacencies[key]?.takeIf { it.size == 2 }?.let { neighbors ->
-                val left = neighbors.keys.first()
-                val right = neighbors.keys.last()
-                val totalSteps = neighbors[left]!! + neighbors[right]!!
-                adjacencies.getOrPut(left) { mutableMapOf() }.merge(right, totalSteps, ::maxOf)
-                adjacencies.getOrPut(right) { mutableMapOf() }.merge(left, totalSteps, ::maxOf)
-                listOf(left, right).forEach { adjacencies[it]?.remove(key) }
-                adjacencies.remove(key)
+            if (key.str == "S" || key.str == "E") {
+                // skip
+            } else {
+                adjacencies[key]?.takeIf { it.size == 2 }?.let { neighbors ->
+                    val left = neighbors.keys.first()
+                    val right = neighbors.keys.last()
+                    val totalSteps = neighbors[left]!! + neighbors[right]!!
+                    adjacencies.getOrPut(left) { mutableMapOf() }.merge(right, totalSteps, ::maxOf)
+                    adjacencies.getOrPut(right) { mutableMapOf() }.merge(left, totalSteps, ::maxOf)
+                    listOf(left, right).forEach { adjacencies[it]?.remove(key) }
+                    adjacencies.remove(key)
+                }
             }
         }
 
@@ -199,6 +205,10 @@ class Puzzle16 : AbstractAocDay(2024, 16) {
             val previousStr =
                 if (previous != null) "with previous [${previous!!.x}][${previous!!.y}]" else "without previous"
             return "[$x][$y]"
+        }
+
+        fun toFullString(): String {
+            return "[$x][$y]($str)"
         }
     }
 }
