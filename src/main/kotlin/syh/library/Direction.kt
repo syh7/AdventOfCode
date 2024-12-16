@@ -1,6 +1,6 @@
 package syh.library
 
-class Direction(val row: Int, val col: Int) {
+data class Direction(val row: Int, val col: Int) {
 
     fun left90(): Direction {
         return Direction(-1 * col, row)

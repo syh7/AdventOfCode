@@ -23,7 +23,7 @@ data class Graph<T>(val nodes: MutableMap<T, Node<T>> = mutableMapOf()) {
     }
 
     fun dijkstra(from: T): Set<Node<T>> {
-        val finished = mutableSetOf<Node<T>>()
+        val visited = mutableSetOf<Node<T>>()
         val queue = PriorityQueue<Node<T>>(nodes.size)
 
         // Set start point
@@ -36,23 +36,29 @@ data class Graph<T>(val nodes: MutableMap<T, Node<T>> = mutableMapOf()) {
             for (neighbour in node.neighbours.keys) {
 
                 // if neighbour is not seen
-                if (!finished.contains(neighbour)) {
+                if (!visited.contains(neighbour)) {
 
+                    // reset predecessors and distance if new distance is better
                     if (neighbour.distance > node.distance + node.neighbours[neighbour]!!) {
                         // This path is shorter, clear predecessors
                         neighbour.predecessors.clear()
                         neighbour.distance = node.distance + node.neighbours[neighbour]!!
                     }
 
-                    neighbour.predecessors.add(node)
+                    // if distance is better or equal, add predecessor
+                    if (neighbour.distance == node.distance + node.neighbours[neighbour]!!) {
+                        neighbour.predecessors.add(node)
+                    }
+
+                    // add neighbour to queue to visit next
                     queue.add(neighbour)
                 }
             }
 
-            finished.add(node)
+            visited.add(node)
         }
 
-        return finished
+        return visited
     }
 
     fun dijkstra(from: T, to: T): Long {
@@ -84,9 +90,8 @@ data class Node<V>(
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other == this) return true
         if (other == null || other.javaClass != this.javaClass) return false
-        return this.value?.equals((other as Node<V>).value) ?: false
+        return this.value?.equals((other as Node<*>).value) ?: false
     }
 
 }
