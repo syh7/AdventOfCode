@@ -32,6 +32,12 @@ data class Graph<T>(val nodes: MutableMap<T, Node<T>> = mutableMapOf()) {
 
         while (!queue.isEmpty()) {
             val node = queue.poll()
+
+            // skip checked nodes
+            if (node in visited) {
+                continue
+            }
+
             // Iterate over all neighbors
             for (neighbour in node.neighbours.keys) {
 
