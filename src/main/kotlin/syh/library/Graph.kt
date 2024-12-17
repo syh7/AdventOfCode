@@ -1,6 +1,7 @@
 package syh.library
 
 import java.util.*
+import java.util.function.Predicate
 
 
 /**
@@ -8,9 +9,17 @@ import java.util.*
  */
 data class Graph<T>(val nodes: MutableMap<T, Node<T>> = mutableMapOf()) {
 
-    fun addNode(node: T) {
-        if (!nodes.containsKey(node)) {
-            nodes[node] = Node(node)
+    fun findNodesSatisfying(predicate: Predicate<T>): List<T> {
+        return nodes.keys.filter { predicate.test(it) }
+    }
+
+    fun getNode(t: T): Node<T>? {
+        return nodes[t]
+    }
+
+    fun addNode(t: T) {
+        if (!nodes.containsKey(t)) {
+            nodes[t] = Node(t)
         }
     }
 
@@ -20,6 +29,10 @@ data class Graph<T>(val nodes: MutableMap<T, Node<T>> = mutableMapOf()) {
         val fromNode = nodes[from]!!
         val toNode = nodes[to]!!
         fromNode.neighbours[toNode] = cost
+    }
+
+    fun reset() {
+        this.nodes.values.forEach { node -> node.reset() }
     }
 
     fun dijkstra(from: T): Set<Node<T>> {
@@ -66,15 +79,6 @@ data class Graph<T>(val nodes: MutableMap<T, Node<T>> = mutableMapOf()) {
 
         return visited
     }
-
-    fun dijkstra(from: T, to: T): Long {
-        for (node in dijkstra(from)) {
-            if (nodes[to] == node) {
-                return node.distance
-            }
-        }
-        return -1
-    }
 }
 
 data class Node<V>(
@@ -83,6 +87,12 @@ data class Node<V>(
     val predecessors: MutableList<Node<V>> = mutableListOf(),
     var distance: Long = Long.MAX_VALUE
 ) : Comparable<Node<V>> {
+
+    fun reset() {
+        this.predecessors.clear()
+        this.distance = Long.MAX_VALUE
+    }
+
     override fun compareTo(other: Node<V>): Int {
         return this.distance.compareTo(other.distance)
     }
@@ -97,7 +107,7 @@ data class Node<V>(
 
     override fun equals(other: Any?): Boolean {
         if (other == null || other.javaClass != this.javaClass) return false
-        return this.value?.equals((other as Node<*>).value) ?: false
+        return this.value?.equals((other as Node<V>).value) ?: false
     }
 
 }

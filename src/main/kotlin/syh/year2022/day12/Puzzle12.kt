@@ -1,9 +1,9 @@
 package syh.year2022.day12
 
 import syh.AbstractAocDay
-
-
-typealias Graph = MutableList<MutableList<Puzzle12.Node>>
+import syh.library.Coord
+import syh.library.Direction
+import syh.library.Graph
 
 
 class Puzzle12 : AbstractAocDay(2022, 12) {
@@ -15,11 +15,14 @@ class Puzzle12 : AbstractAocDay(2022, 12) {
         val lines = readSingleLineFile(file)
             .map { line -> line.split("").filter { it.isNotEmpty() } }
         val graph = readGraph(lines)
+        println("input has size ${lines.size} * ${lines[0].size} = ${lines.size * lines[0].size}")
+        println("graph has ${graph.nodes.size} nodes")
 
-        val startPartA = graph.flatten().first { it.value == START_VALUE }
-        val pathA = performDijkstra(graph, startPartA)
-        println("path a steps: " + pathA.maxBy { it.distance }.distance)
-        return pathA.maxBy { it.distance }.distance.toString()
+        val start = graph.findNodesSatisfying { it.second == START_VALUE }.first()
+        val end = graph.findNodesSatisfying { it.second == END_VALUE }.first()
+        graph.dijkstra(start)
+        println("path a steps: ${graph.getNode(end)}")
+        return graph.getNode(end)!!.distance.toString()
     }
 
     override fun doB(file: String): String {
@@ -27,113 +30,54 @@ class Puzzle12 : AbstractAocDay(2022, 12) {
             .map { line -> line.split("").filter { it.isNotEmpty() } }
         val graph = readGraph(lines)
 
-        val startPartB = graph.flatten().filter { it.value == START_VALUE || it.value == 1 }
-        val minimumStepsB = startPartB.minOf { startB ->
-            val pathB = performDijkstra(graph, startB)
-            val steps = pathB.maxByOrNull { it.distance }?.distance ?: Int.MAX_VALUE
-            println("Start [${startB.x}][${startB.y}] took $steps steps")
-            resetGraph(graph)
+        val startPlaces = graph.findNodesSatisfying { it.second == START_VALUE || it.second == 1 }
+        val end = graph.findNodesSatisfying { it.second == END_VALUE }.first()
+
+        val minimumSteps = startPlaces.minOf { startB ->
+            graph.dijkstra(startB)
+            val endNode = graph.getNode(end)
+            val steps = endNode!!.distance
+            println("Start [${startB} took $steps steps")
+            graph.reset()
             steps
         }
 
-        println(minimumStepsB)
-        return minimumStepsB.toString()
+        println(minimumSteps)
+        return minimumSteps.toString()
     }
 
-    private fun performDijkstra(graph: Graph, startNode: Node): MutableList<Node> {
-        var unvisited = graph.flatten().toMutableList()
+    private fun readGraph(input: List<List<String>>): Graph<Pair<Coord, Int>> {
+        val graph = Graph<Pair<Coord, Int>>()
+        for (row in input.indices) {
+            for (column in input[row].indices) {
+                val coord = Coord(row, column)
+                val node = coord to calculateValue(coord, input)
 
-        startNode.distance = 0
-
-        while (unvisited.isNotEmpty()) {
-            unvisited = unvisited.sortedBy { it.distance }.toMutableList()
-
-            val currentNode = unvisited.first()
-            unvisited.remove(currentNode)
-
-            val unvisitedNeighbours = findNeighbours(currentNode, graph).filter { unvisited.contains(it) }
-
-            val newDistance = currentNode.distance + 1
-            unvisitedNeighbours.forEach { neighbour ->
-                if (neighbour.distance > newDistance) {
-                    neighbour.distance = newDistance
-                    neighbour.previous = currentNode
+                for (direction in Direction.CARDINAL_DIRECTIONS) {
+                    val newCoord = coord.relative(direction)
+                    if (isValidNeighbourValue(coord, newCoord, input)) {
+                        val neighbour = newCoord to calculateValue(newCoord, input)
+                        graph.addEdge(node, neighbour, 1)
+                    }
                 }
             }
         }
-
-        val endNode = graph.flatten().first { it.value == END_VALUE }
-
-        val path = mutableListOf(endNode)
-
-        var pathNode: Node? = endNode
-        while (pathNode != null && pathNode != startNode) {
-            pathNode = pathNode.previous
-            pathNode?.let { path.add(it) }
-        }
-        return if (path.contains(startNode)) {
-            path
-        } else {
-            println("did not find path for start [${startNode.x}][${startNode.y}]")
-            mutableListOf()
-        }
+        return graph
     }
 
-    private fun readGraph(input: List<List<String>>): Graph {
-        val allNodes: Graph = mutableListOf()
-        for (i in input.indices) {
-            val rowNodes = mutableListOf<Node>()
-            for (j in input[i].indices) {
-                rowNodes.add(Node(x = i, y = j, value = calculateValue(input[i][j])))
-            }
-            allNodes.add(rowNodes)
+    private fun isValidNeighbourValue(origin: Coord, new: Coord, grid: List<List<String>>): Boolean {
+        if (new.row !in grid.indices || new.column !in grid[0].indices) {
+            return false
         }
-        return allNodes
+        val originValue = calculateValue(origin, grid)
+        val neighbourValue = calculateValue(new, grid)
+        return neighbourValue <= originValue + 1
     }
 
-    private fun resetGraph(graph: Graph) {
-        graph.flatten().forEach {
-            it.distance = Int.MAX_VALUE
-            it.previous = null
-        }
-    }
-
-    private fun calculateValue(str: String): Int {
+    private fun calculateValue(coord: Coord, grid: List<List<String>>): Int {
+        val str = grid[coord.row][coord.column]
         if (str == "S") return START_VALUE
         if (str == "E") return END_VALUE
-        return str[START_VALUE].code - 96
-    }
-
-    private fun findNeighbours(source: Node, graph: Graph): List<Node> {
-        val neighbours = mutableListOf<Node>()
-
-        if (source.x + 1 in graph.indices && isValidNeighbourValue(source, graph[source.x + 1][source.y])) {
-            neighbours.add(graph[source.x + 1][source.y])
-        }
-        if (source.x - 1 in graph.indices && isValidNeighbourValue(source, graph[source.x - 1][source.y])) {
-            neighbours.add(graph[source.x - 1][source.y])
-        }
-        if (source.y + 1 in graph[source.x].indices && isValidNeighbourValue(source, graph[source.x][source.y + 1])) {
-            neighbours.add(graph[source.x][source.y + 1])
-        }
-        if (source.y - 1 in graph[source.x].indices && isValidNeighbourValue(source, graph[source.x][source.y - 1])) {
-            neighbours.add(graph[source.x][source.y - 1])
-        }
-
-        return neighbours.reversed()
-    }
-
-    private fun isValidNeighbourValue(source: Node, possibleNeighbour: Node): Boolean {
-        return possibleNeighbour.value == source.value || possibleNeighbour.value == source.value + 1 || possibleNeighbour.value < source.value
-    }
-
-    data class Node(
-        val x: Int, val y: Int, val value: Int, var previous: Node? = null, var distance: Int = Int.MAX_VALUE
-    ) {
-        override fun toString(): String {
-            val previousStr =
-                if (previous != null) "with previous [${previous!!.x}][${previous!!.y}]" else "without previous"
-            return "[$x][$y], distance $distance, $previousStr"
-        }
+        return str[0].code - 96
     }
 }
