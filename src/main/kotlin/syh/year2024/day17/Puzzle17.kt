@@ -66,7 +66,7 @@ class Puzzle17 : AbstractAocDay(2024, 17) {
             when (operationCode) {
                 0 -> registers["A"] = (registers["A"]!! / 2.0.pow(getOperand(operand, registers).toInt())).toLong()
                 1 -> registers["B"] = registers["B"]!!.xor(operand.toLong())
-                2 -> registers["B"] = getOperand(operand, registers).and(7).toLong()
+                2 -> registers["B"] = getOperand(operand, registers) % 8
                 3 -> {
                     if (registers["A"] != 0L) {
                         i = operand // set to jnz
@@ -75,7 +75,7 @@ class Puzzle17 : AbstractAocDay(2024, 17) {
                 }
 
                 4 -> registers["B"] = registers["B"]!!.xor(registers["C"]!!)
-                5 -> newInstructions.add(getOperand(operand, registers).and(7).toInt())
+                5 -> newInstructions.add((getOperand(operand, registers) % 8).toInt())
                 6 -> registers["B"] = (registers["A"]!! / 2.0.pow(getOperand(operand, registers).toInt())).toLong()
                 7 -> registers["C"] = (registers["A"]!! / 2.0.pow(getOperand(operand, registers).toInt())).toLong()
             }
