@@ -10,6 +10,10 @@ abstract class AbstractAocDay(val year: Int, val day: Int) {
         return {}.javaClass.classLoader.getResource("year$year/day$day/$file.txt")!!.readText().split("\r\n\r\n")
     }
 
+    fun getFileNameToWrite(file: String, s: String): String {
+        return "src\\test\\resources\\year${year}\\day${day}\\${file}_a"
+    }
+
     abstract fun doA(file: String): String
     abstract fun doB(file: String): String
 

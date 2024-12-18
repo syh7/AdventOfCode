@@ -22,6 +22,9 @@ class Puzzle12 : AbstractAocDay(2022, 12) {
         val end = graph.findNodesSatisfying { it.second == END_VALUE }.first()
         graph.dijkstra(start)
         println("path a steps: ${graph.getNode(end)}")
+
+        graph.writePlantUml(getFileNameToWrite(file, "a"))
+
         return graph.getNode(end)!!.distance.toString()
     }
 

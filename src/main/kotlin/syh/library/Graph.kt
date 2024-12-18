@@ -1,5 +1,12 @@
 package syh.library
 
+import org.jgrapht.graph.DefaultWeightedEdge
+import org.jgrapht.graph.DirectedWeightedMultigraph
+import org.jgrapht.nio.Attribute
+import org.jgrapht.nio.DefaultAttribute
+import org.jgrapht.nio.dot.DOTExporter
+import java.io.File
+import java.io.StringWriter
 import java.util.*
 import java.util.function.Predicate
 
@@ -29,6 +36,15 @@ data class Graph<T>(val nodes: MutableMap<T, Node<T>> = mutableMapOf()) {
         val fromNode = nodes[from]!!
         val toNode = nodes[to]!!
         fromNode.neighbours[toNode] = cost
+    }
+
+    fun removeEdge(from: T, to: T) {
+        if (from !in nodes.keys || to !in nodes.keys) {
+            println("unknown nodes, edge cannot be removed: $from -> $to")
+            return
+        }
+        val toNode = nodes[to]!!
+        nodes[from]!!.neighbours.remove(toNode)
     }
 
     fun reset() {
@@ -78,6 +94,41 @@ data class Graph<T>(val nodes: MutableMap<T, Node<T>> = mutableMapOf()) {
         }
 
         return visited
+    }
+
+    fun writePlantUml(fileName: String) {
+        val sb = StringBuilder()
+        sb.append("@startuml\n")
+        val graphAsString = createGraphvizString()
+
+        sb.append(graphAsString)
+
+        sb.append("@enduml")
+        File("${fileName}_graph.puml").writeText(sb.toString())
+    }
+
+    private fun createGraphvizString(): String {
+        val graph = DirectedWeightedMultigraph<T, DefaultWeightedEdge>(DefaultWeightedEdge::class.java)
+        for (vertex in nodes.keys) {
+            graph.addVertex(vertex)
+        }
+        for (node in nodes.values) {
+            for ((neighbour, cost) in node.neighbours) {
+                graph.setEdgeWeight(graph.addEdge(node.value, neighbour.value), cost.toDouble())
+            }
+        }
+
+        val exporter = DOTExporter<T, DefaultWeightedEdge>()
+        exporter.setVertexAttributeProvider { v ->
+            val map: MutableMap<String, Attribute> = LinkedHashMap<String, Attribute>()
+            map["label"] = DefaultAttribute.createAttribute(v.toString())
+            map
+        }
+
+        val writer = StringWriter()
+        exporter.exportGraph(graph, writer)
+        val graphAsString = writer.toString()
+        return graphAsString
     }
 }
 
