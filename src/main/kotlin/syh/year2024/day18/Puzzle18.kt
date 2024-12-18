@@ -55,17 +55,17 @@ class Puzzle18 : AbstractAocDay(2024, 18) {
 
 
         while (true) {
-            val (graph, visited) = createGraph(size, wallCoords, wallsToTake, startCoord)
+            val (graph, _) = createGraph(size, wallCoords, wallsToTake, startCoord)
             val endNode = graph.getNode(endCoord)!!
-            println("endnode $endNode")
+//            println("endnode $endNode")
 
             if (endNode.distance == Long.MAX_VALUE) {
                 println("found max distance end node that could not be reached")
                 break
             }
 
-            val visitedCoords = visited.map { it.value }
-            val obstructingWallIndex = wallCoords.drop(wallsToTake).indexOfFirst { it in visitedCoords }
+            val endPredecessors = endNode.getPredecessors(endCoord).map { it.value }
+            val obstructingWallIndex = wallCoords.drop(wallsToTake).indexOfFirst { it in endPredecessors }
             wallsToTake += obstructingWallIndex + 1 // add 1 because the new index is 1 off because it starts from 0 after dropping
             println("new wall number: $wallsToTake")
         }

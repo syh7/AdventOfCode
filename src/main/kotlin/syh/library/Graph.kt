@@ -93,6 +93,21 @@ data class Node<V>(
         this.distance = Long.MAX_VALUE
     }
 
+    fun getPredecessors(t: V): Set<Node<V>> {
+        val predecessors = mutableSetOf(this)
+
+        val stack = Stack<Node<V>>()
+        for (predecessor in predecessors) stack.push(predecessor)
+        while (stack.isNotEmpty()) {
+            val pop = stack.pop()
+            if (pop !in predecessors) {
+                predecessors.add(pop)
+                pop.predecessors.forEach { stack.push(it) }
+            }
+        }
+        return predecessors
+    }
+
     override fun compareTo(other: Node<V>): Int {
         return this.distance.compareTo(other.distance)
     }
