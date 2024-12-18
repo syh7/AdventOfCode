@@ -87,7 +87,7 @@ class Puzzle16 : AbstractAocDay(2024, 16) {
                 if (lines[row][column] == "#") continue
 
                 if (lines[row][column] == "S") {
-                    startPositions.add(Coord(row, column) to Direction.E)
+                    startPositions.add(Coord(row, column) to Direction.EAST)
                 }
                 if (lines[row][column] == "E") {
                     Direction.CARDINAL_DIRECTIONS.forEach { endPositions.add(Coord(row, column) to it) }
