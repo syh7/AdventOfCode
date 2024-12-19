@@ -1,6 +1,7 @@
 package syh.year2024.day19
 
 import syh.AbstractAocDay
+import syh.library.Memoization
 
 
 class Puzzle19 : AbstractAocDay(2024, 19) {
@@ -11,8 +12,13 @@ class Puzzle19 : AbstractAocDay(2024, 19) {
 
         println("available towels: $towels")
 
-        val map = mutableMapOf("" to true)
-        val validDesigns = designs.count { validateDesigns(it, towels, map) }
+        val memoization = Memoization<String, Boolean>()
+        memoization.addBaseCase("", true)
+
+        val keyTransformer = { design: String -> towels.filter { towel -> design.startsWith(towel) }.map { towel -> design.removePrefix(towel) } }
+        val valueReducer = { x: Boolean, y: Boolean -> x || y }
+        val exitCondition = { bool: Boolean -> bool }
+        val validDesigns = designs.count { memoization.memoizeEarlyExit(it, false, keyTransformer, valueReducer, exitCondition) }
 
         return validDesigns.toString()
     }
@@ -24,54 +30,13 @@ class Puzzle19 : AbstractAocDay(2024, 19) {
 
         println("available towels: $towels")
 
-        val map = mutableMapOf("" to 1L)
-        val validDesigns = designs.sumOf { countOptions(it, towels, map) }
+        val memoization = Memoization<String, Long>()
+        memoization.addBaseCase("", 1L)
 
-        return validDesigns.toString()
-    }
+        val keyTransformer = { design: String -> towels.filter { towel -> design.startsWith(towel) }.map { towel -> design.removePrefix(towel) } }
+        val valueReducer = { x: Long, y: Long -> x + y }
+        val validTowelOrders = designs.sumOf { memoization.memoize(it, 0L, keyTransformer, valueReducer) }
 
-    private fun validateDesigns(design: String, towels: List<String>, map: MutableMap<String, Boolean>): Boolean {
-//        println("checking design $design")
-        if (map.containsKey(design)) {
-//            println("found in map: ${map[design]}")
-            return map[design]!!
-        }
-
-//        println("checking towels")
-        for (towel in towels) {
-//            println("checking towel $towel for design $design")
-            if (design.startsWith(towel)) {
-                val valid = validateDesigns(design.removePrefix(towel), towels, map)
-                if (valid) {
-                    println("towel $towel is makes design $design valid")
-                    map[design] = true
-                    return true
-                }
-            }
-        }
-//        println("design $design is not valid")
-        map[design] = false
-        return false
-    }
-
-    private fun countOptions(design: String, towels: List<String>, map: MutableMap<String, Long>): Long {
-//        println("checking design $design")
-        if (map.containsKey(design)) {
-//            println("found in map: ${map[design]}")
-            return map[design]!!
-        }
-
-        map[design] = 0
-
-//        println("checking towels")
-        for (towel in towels) {
-            if (design.startsWith(towel)) {
-                val towelValue = countOptions(design.removePrefix(towel), towels, map)
-//                println("towel $towel has $towelValue")
-                map[design] = map[design]!! + towelValue
-            }
-        }
-//        println("design $design has total value ${map[design]}")
-        return map[design]!!
+        return validTowelOrders.toString()
     }
 }
