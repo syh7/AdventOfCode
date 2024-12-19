@@ -64,7 +64,7 @@ class Puzzle18 : AbstractAocDay(2024, 18) {
                 break
             }
 
-            val endPredecessors = endNode.getPredecessors(endCoord).map { it.value }
+            val endPredecessors = endNode.getPredecessors().map { it.value }
             val obstructingWallIndex = wallCoords.drop(wallsToTake).indexOfFirst { it in endPredecessors }
             wallsToTake += obstructingWallIndex + 1 // add 1 because the new index is 1 off because it starts from 0 after dropping
             println("new wall number: $wallsToTake")
