@@ -14,7 +14,7 @@ data class Node<V>(
         this.distance = Long.MAX_VALUE
     }
 
-    fun getPredecessors(): Set<Node<V>> {
+    fun getAllPredecessors(): Set<Node<V>> {
         val totalPredecessors = mutableSetOf<Node<V>>()
 
         val stack = Stack<Node<V>>()

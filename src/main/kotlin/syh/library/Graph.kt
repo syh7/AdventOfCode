@@ -77,6 +77,7 @@ data class Graph<T>(val nodes: MutableMap<T, Node<T>> = mutableMapOf()) {
                     if (neighbour.distance > node.distance + node.neighbours[neighbour]!!) {
                         // This path is shorter, clear predecessors
                         neighbour.predecessors.clear()
+                        neighbour.predecessors.add(node)
                         neighbour.distance = node.distance + node.neighbours[neighbour]!!
                     }
 
