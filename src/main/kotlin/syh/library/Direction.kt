@@ -3,11 +3,15 @@ package syh.library
 data class Direction(val row: Int, val col: Int) {
 
     fun left90(): Direction {
-        return Direction(-1 * col, row)
+        return Direction(-1 * row, col)
     }
 
     fun right90(): Direction {
-        return Direction(col, -1 * row)
+        return Direction(row, -1 * col)
+    }
+
+    fun opposite(): Direction {
+        return Direction(row * -1, col * -1)
     }
 
     override fun toString(): String {
