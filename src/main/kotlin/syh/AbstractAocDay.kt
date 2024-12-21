@@ -11,7 +11,7 @@ abstract class AbstractAocDay(val year: Int, val day: Int) {
     }
 
     fun getFileNameToWrite(file: String, s: String): String {
-        return "src\\test\\resources\\year${year}\\day${day}\\${file}_a"
+        return "src\\test\\resources\\year${year}\\day${day}\\${file}_$s"
     }
 
     abstract fun doA(file: String): String
