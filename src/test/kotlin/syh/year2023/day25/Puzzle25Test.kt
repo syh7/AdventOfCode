@@ -2,21 +2,14 @@ package syh.year2023.day25
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import syh.year2023.day5.Puzzle5
 
 class Puzzle25Test {
 
-    private val subject = Puzzle5()
+    private val subject = Puzzle25()
 
     @Test
     fun a() {
-        assertEquals("35", subject.doA("test"))
-        assertEquals("57075758", subject.doA("actual"))
-    }
-
-    @Test
-    fun b() {
-        assertEquals("46", subject.doB("test"))
-        assertEquals("31161857", subject.doB("actual"))
+        assertEquals("54", subject.doA("test"))
+        assertEquals("600225", subject.doA("actual"))
     }
 }
