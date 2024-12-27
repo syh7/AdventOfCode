@@ -1,7 +1,8 @@
 package syh.year2023.day22
 
+import java.util.SortedSet
+import kotlin.math.max
 import syh.AbstractAocDay
-import java.util.*
 
 
 class Puzzle22 : AbstractAocDay(2023, 22) {
@@ -11,13 +12,10 @@ class Puzzle22 : AbstractAocDay(2023, 22) {
             .mapIndexed { index, str -> mapToBrick(str, index) }
             .toSortedSet()
 
-        println("bricks after reading")
-        bricks.forEach { println(it) }
+//        println("bricks after reading")
+//        bricks.forEach { println(it) }
 
-        // group by lowest z, so we can make multiple parallelize falling
-        bricks.groupBy { it.coords.first().z }.values
-            .forEach { brickList -> brickList.parallelStream().forEach { makeBrickFall(it, bricks) } }
-        fillSupportingBricks(bricks)
+        makeBricksFall(bricks)
 
         println("bricks after falling:")
         bricks.forEach { println(it) }
@@ -30,17 +28,16 @@ class Puzzle22 : AbstractAocDay(2023, 22) {
 
         // .all{} returns true if list is empty
         // so this checks both bricks that are not supporting anything, or bricks that are supporting more than 1 brick
-        return bricks.filter { it.supporting.all { supported -> supported.supportedBy.size > 1 } }
-            .size.toString()
+        return bricks.filter { it.supporting.all { supported -> supported.supportedBy.size > 1 } }.size.toString()
     }
 
     override fun doB(file: String): String {
         val bricks = readFallingBricks(file)
-        val higherBricks = bricks.filterNot { it.coords.any { coord -> coord.z == 1 } }.toSortedSet()
+        val higherBricks = bricks.filterNot { it.start.z == 1 }.toSortedSet()
 
         return bricks.sumOf {
             val value = calculateDisintegratedBricks(it, higherBricks)
-            println("brick ${it.identifier} would disintegrate $value other bricks")
+//            println("brick ${it.identifier} would disintegrate $value other bricks")
             value
         }.toString()
     }
@@ -65,55 +62,45 @@ class Puzzle22 : AbstractAocDay(2023, 22) {
         return disintegrated - 1 // because initial brick does not count
     }
 
-    private fun fillSupportingBricks(bricks: SortedSet<Brick>) {
+    private fun makeBricksFall(bricks: SortedSet<Brick>) {
+
+        val fallenBricks = mutableSetOf<Brick>()
+        var highestZ = 1
+
         for (brick in bricks) {
-            val copySet = bricks.toSortedSet()
-            copySet.remove(brick)
+            // set to current highest z point to prevent needless moving and checking from high z to lower empty z's
+            brick.moveTo(highestZ + 1)
 
-            val lowerConnectingBricks = findIntersectingBricks(brick, copySet, -1)
-            val higherConnectingBricks = findIntersectingBricks(brick, copySet, +1)
+            var moveDown = true
 
-            brick.supporting.addAll(higherConnectingBricks)
-            brick.supportedBy.addAll(lowerConnectingBricks)
-        }
-    }
+            while (moveDown) {
+                brick.move(-1)
 
-    private fun makeBrickFall(brick: Brick, otherBricks: Set<Brick>) {
-        val bricksCopy = otherBricks.toMutableSet()
-        bricksCopy.remove(brick)
+                for (checkBrick in fallenBricks) {
+                    // prevent unnecessary checking
+                    if (checkBrick.end.z < brick.start.z) {
+                        continue
+                    }
 
-//        println()
-//        println("lowering brick $brick")
-        while (brick.coords.first().z > 1) {
-            var intersects = false
+                    if (brick.intersects(checkBrick)) {
+//                        println("brick $brick intersects with $checkBrick")
+                        moveDown = false
+                        brick.supportedBy.add(checkBrick)
+                        checkBrick.supporting.add(brick)
+                    }
 
-            coordloop@ for (coord in brick.coords) {
-                intersects = findIntersectingBricks(brick, bricksCopy, -1).isNotEmpty()
-                if (intersects) break@coordloop
+                }
+                if (!moveDown) {
+                    brick.move(1)
+                }
+                if (brick.start.z == 1) {
+                    break
+                }
             }
 
-            if (intersects) {
-//                println("brick would intersect, so stop falling at z=${brick.coords.first().z}")
-                break
-            }
-
-//            println("lowering brick ${brick.identifier} to z ${brick.coords.first().z}")
-            brick.coords.forEach { it.lower() }
+            fallenBricks.add(brick)
+            highestZ = max(highestZ, brick.end.z)
         }
-    }
-
-    private fun findIntersectingBricks(brick: Brick, otherBricks: Set<Brick>, zOffset: Int): MutableSet<Brick> {
-        val allBricks = mutableSetOf<Brick>()
-        for (coord in brick.coords) {
-            val lowerCoord = Coord3D(coord.x, coord.y, coord.z + zOffset)
-//            println("created changed coord of original coord $coord : $lowerCoord")
-
-            val intersectingBricks = otherBricks.filter { it.coords.contains(lowerCoord) }
-//            intersectingBricks.forEach { println(" - intersects with brick $it") }
-
-            allBricks.addAll(intersectingBricks)
-        }
-        return allBricks
     }
 
     private fun mapToBrick(str: String, index: Int): Brick {
@@ -121,50 +108,63 @@ class Puzzle22 : AbstractAocDay(2023, 22) {
         val (startX, startY, startZ) = start.split(",").map { it.toInt() }
         val (endX, endY, endZ) = end.split(",").map { it.toInt() }
 
-        val startCoord = Coord3D(startX, startY, startZ)
-        if (startX == endX && startY == endY && startZ == endZ) {
-            return Brick(index, sortedSetOf(startCoord))
-        }
-        if (startX != endX) {
-            val coords = IntRange(startX, endX).map { Coord3D(it, startY, startZ) }
-            return Brick(index, coords.toSortedSet())
-        }
-        if (startY != endY) {
-            val coords = IntRange(startY, endY).map { Coord3D(startX, it, startZ) }
-            return Brick(index, coords.toSortedSet())
-        }
-
-        // then Z must be different
-        // because of logic of the puzzle but also because the of the first if checking all coord values
-        val coords = IntRange(startZ, endZ).map { Coord3D(startX, startY, it) }
-        return Brick(index, coords.toSortedSet())
-
+        return Brick(index, Coord3D(startX, startY, startZ), Coord3D(endX, endY, endZ))
     }
 
     data class Brick(
         val identifier: Int,
-        val coords: SortedSet<Coord3D>,
+        val start: Coord3D,
+        val end: Coord3D,
         val supporting: MutableSet<Brick> = mutableSetOf(),
         val supportedBy: MutableSet<Brick> = mutableSetOf()
     ) : Comparable<Brick> {
+
+        fun move(offset: Int) {
+            start.z += offset
+            end.z += offset
+        }
+
+        fun moveTo(newStartZ: Int) {
+            val diff = end.z - start.z
+            start.z = newStartZ
+            end.z = newStartZ + diff
+        }
+
+        fun intersects(other: Brick): Boolean {
+            return (this.start.x in other.start.x..other.end.x
+                    || this.end.x in other.start.x..other.end.x
+                    || other.start.x in this.start.x..this.end.x
+                    || other.end.x in this.start.x..this.end.x)
+                    && (this.start.y in other.start.y..other.end.y
+                    || this.end.y in other.start.y..other.end.y
+                    || other.start.y in this.start.y..this.end.y
+                    || other.end.y in this.start.y..this.end.y)
+                    && (this.start.z in other.start.z..other.end.z
+                    || this.end.z in other.start.z..other.end.z
+                    || other.start.z in this.start.z..this.end.z
+                    || other.end.z in this.start.z..this.end.z)
+        }
+
         override fun compareTo(other: Brick): Int {
-            return this.coords.first().compareTo(other.coords.first())
+            return this.start.compareTo(other.start)
         }
 
         override fun toString(): String {
-            return "{identifier=$identifier, coords=${coords.joinToString()}, supporting=${supporting.map { it.identifier }}, supportedBy=${supportedBy.map { it.identifier }}}}"
+            return "{identifier=$identifier, start=$start, end=$end, supporting=${supporting.map { it.identifier }}, supportedBy=${supportedBy.map { it.identifier }}}}"
         }
 
         override fun hashCode(): Int {
             return identifier
         }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+            return identifier == (other as Brick).identifier
+        }
     }
 
     data class Coord3D(val x: Int, val y: Int, var z: Int) : Comparable<Coord3D> {
-        fun lower() {
-            this.z -= 1
-        }
-
         override fun compareTo(other: Coord3D): Int {
             if (this.z != other.z) {
                 return this.z.compareTo(other.z)
