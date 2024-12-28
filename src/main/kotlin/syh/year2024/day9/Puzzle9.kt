@@ -39,42 +39,41 @@ class Puzzle9 : AbstractAocDay(2024, 9) {
     }
 
     override fun doB(file: String): String {
-        val chars = readSingleLineFile(file)
-            .map { it.split("").filter { c -> c.isNotEmpty() }.map { c -> c.toInt() } }[0]
+        val filesystem = readSingleLineFile(file).map { it.split("").filter { c -> c.isNotEmpty() }.map { c -> c.toInt() } }[0].toMutableList()
+        var checksum = 0L
 
-        println(chars)
-
-        val expandedStrings = expandCharsToLists(chars)
-
-        println(expandedStrings)
-
-        var index = expandedStrings.size - 1
-        while (index != 0) {
-            if (expandedStrings[index].contains(".")) {
-                index--
-                continue
-            }
-
-            println("trying to move index $index: " + expandedStrings[index])
-            val size = expandedStrings[index].size
-            val swapIndex = expandedStrings.indexOfFirst { it.count { c -> c == "." } >= size }
-            if (swapIndex == -1 || swapIndex >= index) {
-                println("could not swap $index")
-            } else {
-                val startSwapIndex = expandedStrings[swapIndex].indexOfFirst { c -> c == "." }
-                for (i in startSwapIndex..<startSwapIndex + size) {
-                    expandedStrings[swapIndex][i] = expandedStrings[index][0]
-                }
-                expandedStrings[index] = MutableList(size) { "." }
-            }
-            index--
+        val openStartIndex = mutableListOf<Int>()
+        openStartIndex.add(0)
+        for (i in 1..<filesystem.size) {
+            openStartIndex.add(openStartIndex[i - 1] + filesystem[i - 1])
         }
 
-        println(expandedStrings)
+        var right = filesystem.size - 1
+        while (right >= 0) {
+            var found = false
+            var left = 1
+            while (left < right) {
+                if (filesystem[left] >= filesystem[right]) {
+                    for (i in 0..<filesystem[right]) {
+                        checksum += (right / 2).toLong() * (openStartIndex[left] + i)
+                    }
+                    filesystem[left] -= filesystem[right]
+                    openStartIndex[left] += filesystem[right]
+                    found = true
+                    break
+                }
+                left += 2
+            }
+            if (!found) {
+                for (i in 0..<filesystem[right]) {
+                    checksum += (right / 2).toLong() * (openStartIndex[right] + i)
+                }
+            }
+            right -= 2
+        }
 
-        val charMap = expandedStrings.flatten().toMutableList()
-
-        return calculateChecksum(charMap).toString()
+        println(checksum)
+        return checksum.toString()
     }
 
     private fun expandCharsToLists(chars: List<Int>): MutableList<MutableList<String>> {
