@@ -167,8 +167,6 @@ Determine the quality level of each blueprint using the largest number of geodes
 
 Your puzzle answer was 1981.
 
-The first half of this puzzle is complete! It provides one gold star: *
-
 --- Part Two ---
 While you were choosing the best blueprint, the elephants found some food on their own, so you're not in as much of a hurry; you figure you probably have 32 minutes before the wind changes direction again and you'll need to get out of range of the erupting volcano.
 
@@ -375,3 +373,5 @@ However, blueprint 2 from the example above is still better; using it, the large
 You no longer have enough blueprints to worry about quality levels. Instead, for each of the first three blueprints, determine the largest number of geodes you could open; then, multiply these three values together.
 
 Don't worry about quality levels; instead, just determine the largest number of geodes you could open using each of the first three blueprints. What do you get if you multiply these numbers together?
+
+Your puzzle answer was 10962.
