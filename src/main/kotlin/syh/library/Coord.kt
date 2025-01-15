@@ -16,4 +16,8 @@ data class Coord(val row: Int, val column: Int) {
     fun manhattanDistance(other: Coord): Int {
         return abs(row - other.row) + abs(column - other.column)
     }
+
+    fun mod(rowMod: Int, columnMod: Int): Coord {
+        return Coord((row + rowMod) % rowMod, (column + columnMod) % columnMod)
+    }
 }
