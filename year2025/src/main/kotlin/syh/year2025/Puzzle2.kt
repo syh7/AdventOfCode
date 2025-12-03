@@ -30,32 +30,19 @@ class Puzzle2 : AbstractAocDay(2025, 2) {
         val ranges = readRanges(file)
         println(ranges)
 
-        val foundRanges = mutableSetOf<Long>()
+        val repeatedNumber = mutableSetOf<Long>()
         val pattern = Pattern.compile("^(\\d+)\\1+$")
 
         for (range in ranges) {
             for (number in range) {
                 if (pattern.matcher(number.toString()).find()) {
-                    foundRanges.add(number)
+                    repeatedNumber.add(number)
                     println("found $number")
                 }
-
-                // works but is slower
-//                val numberStr = number.toString()
-//                val length = numberStr.length
-//
-//                for (i in 1..length / 2) {
-//                    val strToCheck = numberStr.substring(0..<i)
-//                    val multiple = length / i
-//                    if (numberStr == strToCheck.repeat(multiple)) {
-//                        foundRanges.add(number)
-//                        println("found $number")
-//                    }
-//                }
             }
         }
 
-        return foundRanges.sum().toString()
+        return repeatedNumber.sum().toString()
     }
 
     private fun readRanges(file: String) = readSingleLineFile(file)
