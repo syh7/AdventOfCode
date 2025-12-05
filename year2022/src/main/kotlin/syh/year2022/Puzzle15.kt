@@ -1,8 +1,8 @@
 package syh.year2022
 
 import kotlin.math.abs
-import kotlin.math.max
 import syh.library.AbstractAocDay
+import syh.library.merge
 
 
 class Puzzle15 : AbstractAocDay(2022, 15) {
@@ -44,7 +44,7 @@ class Puzzle15 : AbstractAocDay(2022, 15) {
         println(sensorMap)
 
         val allRanges = sensorMap.map { (sensor, manDis) -> calculateRange(sensor, manDis, y) }
-        val mergedRanges = mergeRanges(allRanges)
+        val mergedRanges = allRanges.filter { it.first <= it.last }.merge()
         val sum = mergedRanges.sumOf { it.last - it.first }
         println("total values in summed ranges is $sum")
         return sum.toString()
@@ -106,7 +106,7 @@ class Puzzle15 : AbstractAocDay(2022, 15) {
         return "should have found something in the loop above"
     }
 
-    private fun coordinateOutsideAllSensors(sensorMap: Map<Puzzle15.Coord, Long>, x: Long, y: Long, maxX: Long, maxY: Long): Boolean {
+    private fun coordinateOutsideAllSensors(sensorMap: Map<Coord, Long>, x: Long, y: Long, maxX: Long, maxY: Long): Boolean {
         if (x !in 0..maxX || y !in 0..maxY) {
             // outside of valid range
             return false
@@ -125,25 +125,6 @@ class Puzzle15 : AbstractAocDay(2022, 15) {
         println("calculating range for sensor $sensor with manhattan $manhattanDistance")
         println("\ty=$manDisY, thus x=$leftoverManDis, thus range is $range")
         return range
-    }
-
-    private fun mergeRanges(ranges: List<LongRange>): MutableList<LongRange> {
-        // only use ranges where first is before last
-        val sorted = ranges.sortedBy { it.first }.filter { it.first <= it.last }
-        val newRanges = mutableListOf(sorted[0])
-        for (currentRange in sorted) {
-            val lastNew = newRanges.last()
-            if (currentRange.first <= lastNew.last) {
-                val newRange = LongRange(lastNew.first, max(currentRange.last, lastNew.last))
-                println("current range $currentRange fits in $lastNew so merging to $newRange")
-                newRanges.removeLast()
-                newRanges.add(newRange)
-            } else {
-                newRanges.add(currentRange)
-                println("could not merge $currentRange")
-            }
-        }
-        return newRanges
     }
 
     private fun calculateManhattan(coord1: Coord, coord2: Coord): Long {
