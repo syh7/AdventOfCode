@@ -5,17 +5,17 @@ import org.junit.jupiter.api.Test
 
 class Puzzle17Test {
 
-    private val subject = Puzzle5()
+    private val subject = Puzzle17()
 
     @Test
     fun a() {
-        assertEquals("35", subject.doA("test"))
-        assertEquals("57075758", subject.doA("actual"))
+        assertEquals("102", subject.doA("test"))
+        assertEquals("1065", subject.doA("actual"))
     }
 
     @Test
     fun b() {
-        assertEquals("46", subject.doB("test"))
-        assertEquals("31161857", subject.doB("actual"))
+        assertEquals("94", subject.doB("test"))
+        assertEquals("1249", subject.doB("actual"))
     }
 }
