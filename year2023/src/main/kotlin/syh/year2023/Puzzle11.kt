@@ -2,6 +2,7 @@ package syh.year2023
 
 import kotlin.math.abs
 import syh.library.AbstractAocDay
+import syh.library.Coord
 
 
 class Puzzle11 : AbstractAocDay(2023, 11) {
@@ -72,8 +73,8 @@ class Puzzle11 : AbstractAocDay(2023, 11) {
                 }
                 val distance = findDistance(galaxy, otherGalaxy)
 
-                val crossedEmptyRows = emptyRows.count { it in createMinMaxRange(galaxy.coord.x, otherGalaxy.coord.x) }
-                val crossedEmptyColumns = emptyColumns.count { it in createMinMaxRange(galaxy.coord.y, otherGalaxy.coord.y) }
+                val crossedEmptyRows = emptyRows.count { it in createMinMaxRange(galaxy.coord.row, otherGalaxy.coord.row) }
+                val crossedEmptyColumns = emptyColumns.count { it in createMinMaxRange(galaxy.coord.column, otherGalaxy.coord.column) }
 
                 val multipliedDistance = distance +
                         (crossedEmptyRows * (spaceMultiplierForA - 1)) +
@@ -94,8 +95,8 @@ class Puzzle11 : AbstractAocDay(2023, 11) {
     }
 
     private fun findDistance(galaxy: Node, otherGalaxy: Node): Long {
-        val deltaX = abs(galaxy.coord.x - otherGalaxy.coord.x)
-        val deltaY = abs(galaxy.coord.y - otherGalaxy.coord.y)
+        val deltaX = abs(galaxy.coord.row - otherGalaxy.coord.row)
+        val deltaY = abs(galaxy.coord.column - otherGalaxy.coord.column)
         return (deltaX + deltaY).toLong()
     }
 
@@ -146,12 +147,6 @@ class Puzzle11 : AbstractAocDay(2023, 11) {
             val previousStr =
                 if (previous != null) "with previous ${previous!!.coord}" else "without previous"
             return "$coord, distance $distance, $previousStr"
-        }
-    }
-
-    data class Coord(val x: Int, val y: Int) {
-        override fun toString(): String {
-            return "[$x][$y]"
         }
     }
 

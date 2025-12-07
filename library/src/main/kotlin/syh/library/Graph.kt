@@ -20,6 +20,10 @@ data class Graph<T>(val nodes: MutableMap<T, Node<T>> = mutableMapOf()) {
         return nodes.keys.filter { predicate.test(it) }
     }
 
+    fun getNode(predicate: Predicate<T>): List<Node<T>> {
+        return nodes.filter { predicate.test(it.key) }.values.toList()
+    }
+
     fun getNode(t: T): Node<T>? {
         return nodes[t]
     }

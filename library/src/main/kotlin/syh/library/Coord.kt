@@ -20,4 +20,8 @@ data class Coord(val row: Int, val column: Int) {
     fun mod(rowMod: Int, columnMod: Int): Coord {
         return Coord((row + rowMod) % rowMod, (column + columnMod) % columnMod)
     }
+
+    fun isNeighbour(other: Coord, allowedNeighbourDirections: List<Direction>): Boolean {
+        return allowedNeighbourDirections.any { this.relative(it) == other }
+    }
 }

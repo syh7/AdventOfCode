@@ -1,6 +1,8 @@
 package syh.year2024
 
 import syh.library.AbstractAocDay
+import syh.library.Coord
+import syh.library.Direction
 
 class Puzzle6 : AbstractAocDay(2024, 6) {
     override fun doA(file: String): String {
@@ -16,7 +18,7 @@ class Puzzle6 : AbstractAocDay(2024, 6) {
         var totalObstacles = 0L
         for ((counter, node) in path.distinct().withIndex()) {
             println("trying node $counter: ${node.toCoordString()}")
-            if (simulateObstacle(node.x, node.y, start, graph)) {
+            if (simulateObstacle(node.column, node.row, start, graph)) {
                 totalObstacles++
             }
         }
@@ -32,7 +34,7 @@ class Puzzle6 : AbstractAocDay(2024, 6) {
             .mapIndexed { y, strings ->
                 strings.mapIndexed { x, c ->
                     if (c == "^") {
-                        start = Coord(x, y)
+                        start = Coord(y, x)
                         Location.FREE
                     } else {
                         Location.entries.first { it.mapValue == c }
@@ -49,26 +51,26 @@ class Puzzle6 : AbstractAocDay(2024, 6) {
     private fun calculatePath(start: Coord, graph: List<List<Location>>): MutableList<Coord> {
         val path = mutableListOf(start)
         var current = start
-        var direction = Direction.UP
+        var direction = Direction.NORTH
 
         val ySize = graph.size
         val xSize = graph[0].size
 
         while (true) {
-            val tryDirection = move(direction, current)
+            val tryDirection = current.relative(direction)
 
-            if (graph[tryDirection.y][tryDirection.x] == Location.FREE) {
+            if (graph[tryDirection.row][tryDirection.column] == Location.FREE) {
                 path.add(tryDirection)
                 current = tryDirection
 //                println("went straight at ${current.toCoordString()}")
 
-                if (reachedEnd(current.x, xSize) || reachedEnd(current.y, ySize)) {
+                if (reachedEnd(current.column, xSize) || reachedEnd(current.row, ySize)) {
 //                    println("found end at ${current.toCoordString()}")
                     break
                 }
 
             } else {
-                direction = turnRight(direction)
+                direction = direction.right90()
 //                println("turned right at ${current.toCoordString()}")
             }
         }
@@ -84,7 +86,7 @@ class Puzzle6 : AbstractAocDay(2024, 6) {
     ): Boolean {
         val path = mutableSetOf<Pair<Coord, Direction>>()
         var current = start
-        var direction = Direction.UP
+        var direction = Direction.NORTH
 
         val ySize = graph.size
         val xSize = graph[0].size
@@ -92,13 +94,13 @@ class Puzzle6 : AbstractAocDay(2024, 6) {
         while (true) {
             path.add(current to direction)
 
-            val tryDirection = move(direction, current)
+            val tryDirection = current.relative(direction)
 
-            if (tryDirection.x == obstacleX && tryDirection.y == obstacleY) {
-                direction = turnRight(direction)
+            if (tryDirection.column == obstacleX && tryDirection.row == obstacleY) {
+                direction = direction.right90()
             } else {
 
-                if (graph[tryDirection.y][tryDirection.x] == Location.FREE) {
+                if (graph[tryDirection.row][tryDirection.column] == Location.FREE) {
                     if (path.contains(tryDirection to direction)) {
 //                println("found loop")
 //                println(path)
@@ -107,13 +109,13 @@ class Puzzle6 : AbstractAocDay(2024, 6) {
                     path.add(tryDirection to direction)
                     current = tryDirection
 
-                    if (reachedEnd(current.x, xSize) || reachedEnd(current.y, ySize)) {
+                    if (reachedEnd(current.column, xSize) || reachedEnd(current.row, ySize)) {
 //                    println("found end at ${current.toCoordString()}")
                         return false
                     }
 
                 } else {
-                    direction = turnRight(direction)
+                    direction = direction.right90()
                 }
             }
 
@@ -123,26 +125,6 @@ class Puzzle6 : AbstractAocDay(2024, 6) {
 
     private fun reachedEnd(current: Int, size: Int) = current == 0 || current == size - 1
 
-    private fun move(direction: Direction, current: Coord) = when (direction) {
-        Direction.UP -> Coord(current.x, current.y - 1)
-        Direction.RIGHT -> Coord(current.x + 1, current.y)
-        Direction.DOWN -> Coord(current.x, current.y + 1)
-        Direction.LEFT -> Coord(current.x - 1, current.y)
-    }
-
-    private fun turnRight(oldDirection: Direction): Direction {
-        val oldIndex = Direction.entries.indexOf(oldDirection)
-        val newIndex = (oldIndex + 1) % Direction.entries.size
-        return Direction.entries[newIndex]
-    }
-
-    enum class Direction { UP, RIGHT, DOWN, LEFT }
-
     enum class Location(val mapValue: String) { FREE("."), OBSTRUCTION("#") }
 
-    data class Coord(val x: Int, val y: Int) {
-        fun toCoordString(): String {
-            return "[$x][$y]"
-        }
-    }
 }

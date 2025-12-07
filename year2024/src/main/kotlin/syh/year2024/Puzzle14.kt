@@ -2,6 +2,7 @@ package syh.year2024
 
 import kotlin.math.floor
 import syh.library.AbstractAocDay
+import syh.library.Coord
 
 class Puzzle14 : AbstractAocDay(2024, 14) {
     override fun doA(file: String): String {
@@ -13,11 +14,11 @@ class Puzzle14 : AbstractAocDay(2024, 14) {
         val steps = 100
 
         robots.forEach { robot ->
-            var newX = (robot.position.x + (robot.velocity.x * steps)) % wide
-            var newY = (robot.position.y + (robot.velocity.y * steps)) % tall
+            var newX = (robot.position.column + (robot.velocity.column * steps)) % wide
+            var newY = (robot.position.row + (robot.velocity.row * steps)) % tall
             if (newX < 0) newX += wide
             if (newY < 0) newY += tall
-            val newPos = Coord(newX, newY)
+            val newPos = Coord(newY, newX)
             println("calculated new position for robot $robot: $newPos")
             robot.position = newPos
         }
@@ -33,13 +34,13 @@ class Puzzle14 : AbstractAocDay(2024, 14) {
         println("calculated middles: $middleX, $middleY")
 
         robots.forEach { robot ->
-            if (robot.position.x == middleX || robot.position.y == middleY) {
+            if (robot.position.column == middleX || robot.position.row == middleY) {
                 println("robot is in the middle: $robot")
             }
-            if (robot.position.x > middleX && robot.position.y > middleY) quadrant4 += 1
-            if (robot.position.x > middleX && robot.position.y < middleY) quadrant2 += 1
-            if (robot.position.x < middleX && robot.position.y > middleY) quadrant3 += 1
-            if (robot.position.x < middleX && robot.position.y < middleY) quadrant1 += 1
+            if (robot.position.column > middleX && robot.position.row > middleY) quadrant4 += 1
+            if (robot.position.column > middleX && robot.position.row < middleY) quadrant2 += 1
+            if (robot.position.column < middleX && robot.position.row > middleY) quadrant3 += 1
+            if (robot.position.column < middleX && robot.position.row < middleY) quadrant1 += 1
         }
 
         println("calculated quadrants: ")
@@ -61,11 +62,11 @@ class Puzzle14 : AbstractAocDay(2024, 14) {
         var steps = 1
         while (true) {
             robots.forEach { robot ->
-                var newX = (robot.position.x + robot.velocity.x) % wide
-                var newY = (robot.position.y + robot.velocity.y) % tall
+                var newX = (robot.position.column + robot.velocity.column) % wide
+                var newY = (robot.position.row + robot.velocity.row) % tall
                 if (newX < 0) newX += wide
                 if (newY < 0) newY += tall
-                val newPos = Coord(newX, newY)
+                val newPos = Coord(newY, newX)
 //                println("calculated new position for robot $robot: $newPos")
                 robot.position = newPos
             }
@@ -80,19 +81,13 @@ class Puzzle14 : AbstractAocDay(2024, 14) {
         }
     }
 
-    data class Coord(val x: Int, val y: Int) {
-        override fun toString(): String {
-            return "[$x][$y]"
-        }
-    }
-
     data class Robot(var position: Coord, val velocity: Coord) {
         companion object {
             fun readRobot(line: String): Robot {
                 val split = line.split(" ")
                 val (aX, aY) = split[0].split(",").map { it.removePrefix("p=") }.map { c -> c.toInt() }
                 val (bX, bY) = split[1].split(",").map { it.removePrefix("v=") }.map { c -> c.toInt() }
-                return Robot(Coord(aX, aY), Coord(bX, bY))
+                return Robot(Coord(aY, aX), Coord(bY, bX))
             }
         }
     }

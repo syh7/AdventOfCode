@@ -1,13 +1,18 @@
 package syh.year2024
 
 import syh.library.AbstractAocDay
+import syh.library.Coord
+import syh.library.Direction
+import syh.library.Grid
 
 class Puzzle12 : AbstractAocDay(2024, 12) {
     override fun doA(file: String): String {
         println("starting file $file")
-        val graph = readGraph(file)
+        val input = readSingleLineFile(file).map { it.split("").filter { c -> c.isNotEmpty() } }
+        val grid = Grid<String>()
+        grid.create(input) { it }
 
-        val regionMap = createRegionMap(graph)
+        val regionMap = createRegionMap(grid)
 
         var total = 0
         regionMap.map { (k, v) ->
@@ -29,9 +34,11 @@ class Puzzle12 : AbstractAocDay(2024, 12) {
 
     override fun doB(file: String): String {
         println("starting file $file")
-        val graph = readGraph(file)
+        val input = readSingleLineFile(file).map { it.split("").filter { c -> c.isNotEmpty() } }
+        val grid = Grid<String>()
+        grid.create(input) { it }
 
-        val regionMap = createRegionMap(graph)
+        val regionMap = createRegionMap(grid)
 
         var total = 0
         regionMap.map { (k, v) ->
@@ -51,18 +58,18 @@ class Puzzle12 : AbstractAocDay(2024, 12) {
         return total.toString()
     }
 
-    private fun createRegionMap(graph: MutableList<MutableList<Coord>>): MutableMap<String, MutableList<Region>> {
+    private fun createRegionMap(grid: Grid<String>): MutableMap<String, MutableList<Region>> {
         val regionMap = mutableMapOf<String, MutableList<Region>>()
-        for (coord in graph.flatten()) {
+        for ((coord, cellValue) in grid.flatten()) {
             // find all relevant regions for coord
-            regionMap.computeIfAbsent(coord.str) { mutableListOf(Region()) }
-            val relevantRegions = regionMap[coord.str]!!.filter { it.contains(coord) }
+            regionMap.computeIfAbsent(cellValue) { mutableListOf(Region()) }
+            val relevantRegions = regionMap[cellValue]!!.filter { it.contains(coord) }
 
             if (relevantRegions.isEmpty()) {
                 // if no relevant region, create one
                 val region = Region()
                 region.coords.add(coord)
-                regionMap[coord.str]!!.add(region)
+                regionMap[cellValue]!!.add(region)
             } else if (relevantRegions.size == 1) {
                 // if
                 relevantRegions[0].coords.add(coord)
@@ -73,30 +80,13 @@ class Puzzle12 : AbstractAocDay(2024, 12) {
                 for (i in 1..<relevantRegions.size) {
                     combined.coords.addAll(relevantRegions[i].coords)
                 }
-                val notRelevant = regionMap[coord.str]!!.filterNot { it.contains(coord) }
+                val notRelevant = regionMap[cellValue]!!.filterNot { it.contains(coord) }
                 val left = mutableListOf(combined)
                 left.addAll(notRelevant)
-                regionMap[coord.str] = left
+                regionMap[cellValue] = left
             }
         }
         return regionMap
-    }
-
-    private fun readGraph(file: String): MutableList<MutableList<Coord>> {
-        val chars = readSingleLineFile(file)
-            .map { it.split("").filter { c -> c.isNotEmpty() } }
-
-        val graph = mutableListOf<MutableList<Coord>>()
-        for (j in chars.indices) {
-            val row = mutableListOf<Coord>()
-            for (i in chars[0].indices) {
-                row.add(Coord(i, j, chars[j][i]))
-            }
-            graph.add(row)
-        }
-
-        for (row in graph) println(row.map { it.str })
-        return graph
     }
 
     data class Region(val coords: MutableSet<Coord> = mutableSetOf()) {
@@ -106,7 +96,7 @@ class Puzzle12 : AbstractAocDay(2024, 12) {
 
             for (coord in coords) {
                 total += 4
-                val neighbours = coords.filter { coord.isNeighbour(it) }
+                val neighbours = coords.filter { coord.isNeighbour(it, Direction.CARDINAL_DIRECTIONS) }
 //                println("coord ${coord.toCoordString()} has neighbours ${neighbours.map { it.toCoordString() }}")
                 neighbours.forEach { _ -> total -= 1 }
             }
@@ -138,10 +128,10 @@ class Puzzle12 : AbstractAocDay(2024, 12) {
         }
 
         private fun checkOuterCorners(coord: Coord): Int {
-            val north = coord.getDirection(Direction.NORTH)
-            val east = coord.getDirection(Direction.EAST)
-            val south = coord.getDirection(Direction.SOUTH)
-            val west = coord.getDirection(Direction.WEST)
+            val north = coord.relative(Direction.NORTH)
+            val east = coord.relative(Direction.EAST)
+            val south = coord.relative(Direction.SOUTH)
+            val west = coord.relative(Direction.WEST)
 
             var totalCorners = 0
             if (!coords.contains(north) && !coords.contains(east)) {
@@ -165,14 +155,14 @@ class Puzzle12 : AbstractAocDay(2024, 12) {
         }
 
         private fun checkInnerCorners(coord: Coord): Int {
-            val north = coord.getDirection(Direction.NORTH)
-            val northEast = coord.getDirection(Direction.NORTH_EAST)
-            val east = coord.getDirection(Direction.EAST)
-            val southEast = coord.getDirection(Direction.SOUTH_EAST)
-            val south = coord.getDirection(Direction.SOUTH)
-            val southWest = coord.getDirection(Direction.SOUTH_WEST)
-            val west = coord.getDirection(Direction.WEST)
-            val northWest = coord.getDirection(Direction.NORTH_WEST)
+            val north = coord.relative(Direction.NORTH)
+            val northEast = coord.relative(Direction.NORTH_EAST)
+            val east = coord.relative(Direction.EAST)
+            val southEast = coord.relative(Direction.SOUTH_EAST)
+            val south = coord.relative(Direction.SOUTH)
+            val southWest = coord.relative(Direction.SOUTH_WEST)
+            val west = coord.relative(Direction.WEST)
+            val northWest = coord.relative(Direction.NORTH_WEST)
 
             var innerCorners = 0
             if (coords.contains(north) && coords.contains(west) && !coords.contains(northWest)) {
@@ -195,37 +185,7 @@ class Puzzle12 : AbstractAocDay(2024, 12) {
         }
 
         fun contains(coord: Coord): Boolean {
-            return coords.isEmpty() || coords.any { it.isNeighbour(coord) }
+            return coords.isEmpty() || coords.any { it.isNeighbour(coord, Direction.CARDINAL_DIRECTIONS) }
         }
     }
-
-    data class Coord(
-        val x: Int, val y: Int, val str: String
-    ) {
-
-        fun getDirection(direction: Direction): Coord {
-            return when (direction) {
-                Direction.NORTH -> Coord(x, y - 1, str)
-                Direction.NORTH_EAST -> Coord(x + 1, y - 1, str)
-                Direction.EAST -> Coord(x + 1, y, str)
-                Direction.SOUTH_EAST -> Coord(x + 1, y + 1, str)
-                Direction.SOUTH -> Coord(x, y + 1, str)
-                Direction.SOUTH_WEST -> Coord(x - 1, y + 1, str)
-                Direction.WEST -> Coord(x - 1, y, str)
-                Direction.NORTH_WEST -> Coord(x - 1, y - 1, str)
-            }
-        }
-
-        fun isNeighbour(other: Coord): Boolean {
-            return (this.x == other.x && (this.y == other.y - 1 || this.y == other.y + 1))
-                    || (this.y == other.y && (this.x == other.x - 1 || this.x == other.x + 1))
-        }
-
-        fun toCoordString(): String {
-            return "[$x][$y]"
-        }
-    }
-
-    enum class Direction { NORTH, NORTH_WEST, WEST, SOUTH_WEST, SOUTH, SOUTH_EAST, EAST, NORTH_EAST }
-
 }

@@ -1,6 +1,7 @@
 package syh.year2023
 
 import syh.library.AbstractAocDay
+import syh.library.Coord
 
 
 private val EMPTY = "."
@@ -151,29 +152,29 @@ class Puzzle16 : AbstractAocDay(2023, 16) {
     ): List<Pair<CaveFloor, String>> {
         // no mirror = "."
         if (originDirection == "EAST") {
-            return if (caveFloor.coord.y + 1 < grid[0].size) {
-                listOf(Pair(grid[caveFloor.coord.x][caveFloor.coord.y + 1], "EAST"))
+            return if (caveFloor.coord.column + 1 < grid[0].size) {
+                listOf(Pair(grid[caveFloor.coord.row][caveFloor.coord.column + 1], "EAST"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "WEST") {
-            return if (caveFloor.coord.y - 1 >= 0) {
-                listOf(Pair(grid[caveFloor.coord.x][caveFloor.coord.y - 1], "WEST"))
+            return if (caveFloor.coord.column - 1 >= 0) {
+                listOf(Pair(grid[caveFloor.coord.row][caveFloor.coord.column - 1], "WEST"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "NORTH") {
-            return if (caveFloor.coord.x - 1 >= 0) {
-                listOf(Pair(grid[caveFloor.coord.x - 1][caveFloor.coord.y], "NORTH"))
+            return if (caveFloor.coord.row - 1 >= 0) {
+                listOf(Pair(grid[caveFloor.coord.row - 1][caveFloor.coord.column], "NORTH"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "SOUTH") {
-            return if (caveFloor.coord.x + 1 < grid.size) {
-                listOf(Pair(grid[caveFloor.coord.x + 1][caveFloor.coord.y], "SOUTH"))
+            return if (caveFloor.coord.row + 1 < grid.size) {
+                listOf(Pair(grid[caveFloor.coord.row + 1][caveFloor.coord.column], "SOUTH"))
             } else {
                 emptyList()
             }
@@ -188,26 +189,26 @@ class Puzzle16 : AbstractAocDay(2023, 16) {
     ): List<Pair<CaveFloor, String>> {
         // mirror = '-'
         if (originDirection == "EAST") {
-            return if (caveFloor.coord.y + 1 < grid[0].size) {
-                listOf(Pair(grid[caveFloor.coord.x][caveFloor.coord.y + 1], "EAST"))
+            return if (caveFloor.coord.column + 1 < grid[0].size) {
+                listOf(Pair(grid[caveFloor.coord.row][caveFloor.coord.column + 1], "EAST"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "WEST") {
-            return if (caveFloor.coord.y - 1 >= 0) {
-                listOf(Pair(grid[caveFloor.coord.x][caveFloor.coord.y - 1], "WEST"))
+            return if (caveFloor.coord.column - 1 >= 0) {
+                listOf(Pair(grid[caveFloor.coord.row][caveFloor.coord.column - 1], "WEST"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "NORTH" || originDirection == "SOUTH") {
             val neighbours = mutableListOf<Pair<CaveFloor, String>>()
-            if (caveFloor.coord.y - 1 >= 0) {
-                neighbours.add(Pair(grid[caveFloor.coord.x][caveFloor.coord.y - 1], "WEST"))
+            if (caveFloor.coord.column - 1 >= 0) {
+                neighbours.add(Pair(grid[caveFloor.coord.row][caveFloor.coord.column - 1], "WEST"))
             }
-            if (caveFloor.coord.y + 1 < grid[0].size) {
-                neighbours.add(Pair(grid[caveFloor.coord.x][caveFloor.coord.y + 1], "EAST"))
+            if (caveFloor.coord.column + 1 < grid[0].size) {
+                neighbours.add(Pair(grid[caveFloor.coord.row][caveFloor.coord.column + 1], "EAST"))
             }
             return neighbours
         }
@@ -221,26 +222,26 @@ class Puzzle16 : AbstractAocDay(2023, 16) {
     ): List<Pair<CaveFloor, String>> {
         // mirror = '|'
         if (originDirection == "NORTH") {
-            return if (caveFloor.coord.x - 1 >= 0) {
-                listOf(Pair(grid[caveFloor.coord.x - 1][caveFloor.coord.y], "NORTH"))
+            return if (caveFloor.coord.row - 1 >= 0) {
+                listOf(Pair(grid[caveFloor.coord.row - 1][caveFloor.coord.column], "NORTH"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "SOUTH") {
-            return if (caveFloor.coord.x + 1 < grid.size) {
-                listOf(Pair(grid[caveFloor.coord.x + 1][caveFloor.coord.y], "SOUTH"))
+            return if (caveFloor.coord.row + 1 < grid.size) {
+                listOf(Pair(grid[caveFloor.coord.row + 1][caveFloor.coord.column], "SOUTH"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "EAST" || originDirection == "WEST") {
             val neighbours = mutableListOf<Pair<CaveFloor, String>>()
-            if (caveFloor.coord.x - 1 >= 0) {
-                neighbours.add(Pair(grid[caveFloor.coord.x - 1][caveFloor.coord.y], "NORTH"))
+            if (caveFloor.coord.row - 1 >= 0) {
+                neighbours.add(Pair(grid[caveFloor.coord.row - 1][caveFloor.coord.column], "NORTH"))
             }
-            if (caveFloor.coord.x + 1 < grid.size) {
-                neighbours.add(Pair(grid[caveFloor.coord.x + 1][caveFloor.coord.y], "SOUTH"))
+            if (caveFloor.coord.row + 1 < grid.size) {
+                neighbours.add(Pair(grid[caveFloor.coord.row + 1][caveFloor.coord.column], "SOUTH"))
             }
             return neighbours
         }
@@ -255,29 +256,29 @@ class Puzzle16 : AbstractAocDay(2023, 16) {
     ): List<Pair<CaveFloor, String>> {
         // mirror = '/'
         if (originDirection == "NORTH") {
-            return if (caveFloor.coord.y + 1 < grid[0].size) {
-                listOf(Pair(grid[caveFloor.coord.x][caveFloor.coord.y + 1], "EAST"))
+            return if (caveFloor.coord.column + 1 < grid[0].size) {
+                listOf(Pair(grid[caveFloor.coord.row][caveFloor.coord.column + 1], "EAST"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "SOUTH") {
-            return if (caveFloor.coord.y - 1 >= 0) {
-                listOf(Pair(grid[caveFloor.coord.x][caveFloor.coord.y - 1], "WEST"))
+            return if (caveFloor.coord.column - 1 >= 0) {
+                listOf(Pair(grid[caveFloor.coord.row][caveFloor.coord.column - 1], "WEST"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "EAST") {
-            return if (caveFloor.coord.x - 1 >= 0) {
-                listOf(Pair(grid[caveFloor.coord.x - 1][caveFloor.coord.y], "NORTH"))
+            return if (caveFloor.coord.row - 1 >= 0) {
+                listOf(Pair(grid[caveFloor.coord.row - 1][caveFloor.coord.column], "NORTH"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "WEST") {
-            return if (caveFloor.coord.x + 1 < grid.size) {
-                listOf(Pair(grid[caveFloor.coord.x + 1][caveFloor.coord.y], "SOUTH"))
+            return if (caveFloor.coord.row + 1 < grid.size) {
+                listOf(Pair(grid[caveFloor.coord.row + 1][caveFloor.coord.column], "SOUTH"))
             } else {
                 emptyList()
             }
@@ -293,29 +294,29 @@ class Puzzle16 : AbstractAocDay(2023, 16) {
     ): List<Pair<CaveFloor, String>> {
         // mirror = '\'
         if (originDirection == "NORTH") {
-            return if (caveFloor.coord.y - 1 >= 0) {
-                listOf(Pair(grid[caveFloor.coord.x][caveFloor.coord.y - 1], "WEST"))
+            return if (caveFloor.coord.column - 1 >= 0) {
+                listOf(Pair(grid[caveFloor.coord.row][caveFloor.coord.column - 1], "WEST"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "SOUTH") {
-            return if (caveFloor.coord.y + 1 < grid[0].size) {
-                listOf(Pair(grid[caveFloor.coord.x][caveFloor.coord.y + 1], "EAST"))
+            return if (caveFloor.coord.column + 1 < grid[0].size) {
+                listOf(Pair(grid[caveFloor.coord.row][caveFloor.coord.column + 1], "EAST"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "EAST") {
-            return if (caveFloor.coord.x + 1 < grid.size) {
-                listOf(Pair(grid[caveFloor.coord.x + 1][caveFloor.coord.y], "SOUTH"))
+            return if (caveFloor.coord.row + 1 < grid.size) {
+                listOf(Pair(grid[caveFloor.coord.row + 1][caveFloor.coord.column], "SOUTH"))
             } else {
                 emptyList()
             }
         }
         if (originDirection == "WEST") {
-            return if (caveFloor.coord.x - 1 >= 0) {
-                listOf(Pair(grid[caveFloor.coord.x - 1][caveFloor.coord.y], "NORTH"))
+            return if (caveFloor.coord.row - 1 >= 0) {
+                listOf(Pair(grid[caveFloor.coord.row - 1][caveFloor.coord.column], "NORTH"))
             } else {
                 emptyList()
             }
@@ -337,6 +338,4 @@ class Puzzle16 : AbstractAocDay(2023, 16) {
             }
         }
     }
-
-    data class Coord(val x: Int, val y: Int)
 }

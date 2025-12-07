@@ -14,6 +14,10 @@ data class Direction(val row: Int, val col: Int) {
         return Direction(row * -1, col * -1)
     }
 
+    fun multiply(length: Int): Direction {
+        return Direction(row * length, col * length)
+    }
+
     override fun toString(): String {
         return "($row,$col)"
     }
