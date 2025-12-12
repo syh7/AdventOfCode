@@ -24,4 +24,8 @@ data class Coord(val row: Int, val column: Int) {
     fun isNeighbour(other: Coord, allowedNeighbourDirections: List<Direction>): Boolean {
         return allowedNeighbourDirections.any { this.relative(it) == other }
     }
+
+    fun plus(other: Coord): Coord {
+        return Coord(this.row + other.row, this.column + other.column)
+    }
 }
