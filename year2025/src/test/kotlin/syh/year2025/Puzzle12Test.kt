@@ -9,8 +9,8 @@ class Puzzle12Test {
 
     @Test
     fun a() {
-        assertEquals("", subject.doA("test"))
-        assertEquals("", subject.doA("actual"))
+        assertEquals("2", subject.doA("test"))
+        assertEquals("443", subject.doA("actual"))
     }
 
     @Test
