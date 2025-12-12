@@ -1,6 +1,7 @@
 package syh.year2025
 
 import syh.library.AbstractAocDay
+import syh.library.GaussianSolver
 import syh.library.findShortestPathByPredicate
 
 class Puzzle10 : AbstractAocDay(2025, 10) {
@@ -35,32 +36,21 @@ class Puzzle10 : AbstractAocDay(2025, 10) {
         return result.getScore()
     }
 
-    private fun minimalCounterPresses(manual: Manual): Int {
+    private fun minimalCounterPresses(manual: Manual): Long {
 
-        val result = findShortestPathByPredicate(
-            start = List(manual.expectedValues.size) { 0 },
-            endFunction = { checkEqual(manual.joltage, it) },
-            neighbours = { initial ->
-                manual.buttons.map { button ->
-                    initial.mapIndexed { index, n -> if (button.contains(index)) n + 1 else n }
+        val nrOfCounters = manual.joltage.size
+        val nrOfButtons = manual.buttons.size
+
+        val coefficients = Array(nrOfCounters) { IntArray(nrOfButtons) }
+        for (b in 0..<nrOfButtons) {
+            for (idx in manual.buttons[b]) {
+                if (idx < nrOfCounters) {
+                    coefficients[idx][b] = 1
                 }
-                    .filter { !joltageToHigh(it, manual.joltage) }
-            },
-            cost = { current, _ -> if (joltageToHigh(current, manual.joltage)) 1000 else 1 }
-        )
-        println("for manual $manual")
-        println("manual has score ${result.getScore()}")
-        println("found joltage ${result.getPath()}")
-        return result.getScore()
-    }
-
-    private fun joltageToHigh(current: List<Int>, expected: List<Int>): Boolean {
-        for (i in current.indices) {
-            if (current[i] > expected[i]) {
-                return true
             }
         }
-        return false
+
+        return GaussianSolver.solve(coefficients, manual.joltage.toIntArray())
     }
 
     private fun <T> checkEqual(a: List<T>, b: List<T>): Boolean {

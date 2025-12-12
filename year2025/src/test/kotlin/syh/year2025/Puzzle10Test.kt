@@ -16,6 +16,6 @@ class Puzzle10Test {
     @Test
     fun b() {
         assertEquals("33", subject.doB("test"))
-        assertEquals("", subject.doB("actual"))
+        assertEquals("18771", subject.doB("actual"))
     }
 }
